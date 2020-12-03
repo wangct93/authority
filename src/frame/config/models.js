@@ -1,0 +1,1 @@
+import global_mwtzntv6w from '../../models/global.js'; export default [global_mwtzntv6w];

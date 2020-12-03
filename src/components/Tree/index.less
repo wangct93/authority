@@ -1,0 +1,19 @@
+
+
+.topology_box{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .topology_content{
+    flex:1;
+    overflow: auto;
+  }
+  .topology_select{
+    padding:10px 10px 0 10px;
+    :global{
+      .ant-select{
+        width: 100%;
+      }
+    }
+  }
+}

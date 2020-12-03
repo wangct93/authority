@@ -1,0 +1,23 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "dev",
+    "server": "node server",
+    "build": "dev build",
+    "publish": "npm pu --registry https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@wangct/node-util": "^1.0.1",
+    "@wangct/util": "^1.0.3",
+    "@wangct/webpack": "^1.0.0",
+    "antd": "^3.26.20",
+    "react": "^16.14.0",
+    "wangct-react": "^1.0.26"
+  },
+  "devDependencies": {
+    "wangct-server-util": "^1.0.43"
+  }
+}

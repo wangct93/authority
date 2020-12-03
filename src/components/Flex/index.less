@@ -1,0 +1,16 @@
+@import "../../styles/common";
+
+.flex{
+  .flex_parent();
+
+  &.flex_column{
+    .flex_parent_column();
+    .flex_item{
+      .flex_child_column();
+    }
+  }
+
+  .flex_item{
+    .flex_child();
+  }
+}

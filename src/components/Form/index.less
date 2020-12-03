@@ -1,0 +1,28 @@
+@import "../../styles/common";
+
+.w-form{
+  .flex_parent();
+  margin-bottom: -10px;
+  .w-form-line{
+    width: 100%;
+    .flex_parent();
+    line-height: 32px;
+    margin-bottom: 10px;
+  }
+
+  .w-form-label{
+    width: 80px;
+    text-align: right;
+  }
+
+  .w-form-value{
+    .flex_child();
+  }
+
+  .ant-input-number,
+  .ant-select,
+  .ant-input{
+    width: 100%;
+  }
+}
+

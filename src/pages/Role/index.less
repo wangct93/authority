@@ -1,0 +1,73 @@
+.modal_wrap {
+    .drawer_flex {
+        overflow: auto;
+        height: 0;
+    }
+
+    .modal_table {
+        border: 1px solid #ddd;
+        margin: 10px;
+
+        .table_title {
+            display: flex;
+            align-items: center;
+            line-height: 40px;
+            padding-left: 10px;
+            padding-right: 15px;
+            font-size: 16px;
+            background-color: #f1f1f1;
+
+            .table_title_btn_box {
+                flex: 1;
+                text-align: right;
+            }
+        }
+
+        :global {
+            .ant-table-small>.ant-table-content>.ant-table-body {
+                margin: 0;
+            }
+
+            .afc-form-label {
+                width: 120px;
+            }
+
+            .afc-form-box {
+                display: flex;
+                flex-wrap: wrap;
+            }
+        }
+    }
+
+}
+
+.row_checked {
+    cursor: pointer;
+    background: #e6f7ff;
+}
+
+.row_normal {
+    cursor: pointer;
+}
+
+.drawer_footer {
+    padding: 10px;
+    text-align: right;
+    border-top: 1px solid #ddd;
+}
+
+.drawer_content{
+    height:100%;
+    color:#fff;
+    :global{
+        .ant-tree li .ant-tree-node-content-wrapper{
+            color:#fff;
+            background-color: transparent !important;
+        }
+        .ant-tree{
+            .anticon{
+                color:#fff;
+            }
+        }
+    }
+}
