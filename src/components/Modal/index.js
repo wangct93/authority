@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {Modal} from 'antd';
-import {getProps, callFunc, classNames} from "wangct-util";
+import {getProps, callFunc, classNames} from "@wangct/util";
 import './index.less';
 
 export default class WctModal extends PureComponent {

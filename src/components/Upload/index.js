@@ -3,7 +3,7 @@
  */
 import React, {PureComponent} from 'react';
 
-import {callFunc, classNames, getProps, isDef} from "wangct-util";
+import {callFunc, classNames, getProps, isDef} from "@wangct/util";
 import {Button, Upload} from "antd";
 import './index.less';
 

@@ -15,7 +15,7 @@ import {
   objFilter, objMap,
   objSome,
   toNum
-} from 'wangct-util';
+} from '@wangct/util';
 
 const ErrorFormItem = Form.Item;
 

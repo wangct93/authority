@@ -2,9 +2,8 @@ import React from 'react';
 import { Tabs} from 'antd';
 import {connect} from 'react-redux';
 import "./index.less";
-import {callFunc, classNames, getProps, isDef, isFunc, pathJoin, strEqual} from "wangct-util";
+import {callFunc, classNames, getProps, isDef, isFunc, pathJoin, strEqual} from "@wangct/util";
 import DefineComponent from "../DefineComponent";
-import {pathTo} from 'wangct-react-entry';
 
 /**
  * 封装tabs组件

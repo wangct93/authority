@@ -3,7 +3,7 @@
  */
 import React, {PureComponent} from 'react';
 import {Icon} from 'antd';
-import {Cache} from 'wangct-util';
+import {Cache} from '@wangct/util';
 
 const cache = new Cache();
 

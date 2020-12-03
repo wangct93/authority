@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react";
 import './index.less';
-import {getProps, callFunc, classNames, aryToObject, objMap, objFilter} from "wangct-util";
+import {getProps, callFunc, classNames, aryToObject, objMap, objFilter} from "@wangct/util";
 import DefineComponent from "../DefineComponent";
 import {toAry} from "@wangct/util/lib/arrayUtil";
 import {toStr} from "@wangct/util/lib/stringUtil";

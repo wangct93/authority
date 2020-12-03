@@ -1,1 +1,1 @@
-import global_mwtzntv6w from '../../models/global.js'; export default [global_mwtzntv6w];
+import global_8lgjekbn1i from '../../models/global.js'; export default [global_8lgjekbn1i];

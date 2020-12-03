@@ -13,4 +13,6 @@
 npm-debug.log*
 
 /basement.config.js
+/temp
+/debug.log
 

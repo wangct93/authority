@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import {callFunc, getProps} from "wangct-util";
+import {callFunc, getProps} from "@wangct/util";
 
 @connect(({global}) => ({
   resizeSign:global.resizeSign,

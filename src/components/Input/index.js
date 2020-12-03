@@ -1,32 +1,19 @@
+import React from 'react';
+import { Input as BaseInput} from 'antd';
+import {toStr} from "@wangct/util/lib/stringUtil";
+import DefineComponent from "../DefineComponent";
 
-import React, {PureComponent} from 'react';
-import { Input} from 'antd';
-
-import {getProps,callFunc} from "wangct-util";
-
-
-export default class InputCap extends PureComponent {
+/**
+ * 输入框
+ */
+export default class Input extends DefineComponent {
 
   state = {
-    placeholder: '请输入' + (this.props.title || ''),
-    allowClear:true
+    placeholder: '请输入' + toStr(this.props.title),
+    allowClear:true,
   };
-
-  onChange = (e) => {
-    callFunc(this.props.onChange,this.formatValue(e.target.value));
-  };
-
-  formatValue(value){
-    const props = getProps(this);
-    const {formatter} = props;
-    return formatter ? formatter(value,props.value,this) : value;
-  }
-
-  getInputProps(){
-    return getProps(this,['format','title']);
-  }
 
   render(){
-    return <Input {...this.getInputProps()} onChange={this.onChange} />
+    return <BaseInput {...this.getProps()} onChange={this.onChange} />
   }
 }

@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {Radio} from 'antd';
-import {toPromise, callFunc, equal, validateArray, getProps} from "wangct-util";
+import {toPromise, callFunc, equal, validateArray, getProps} from "@wangct/util";
 import {getItemText, getItemValue} from "../common/util";
 
 

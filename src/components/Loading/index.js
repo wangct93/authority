@@ -3,7 +3,7 @@ import {Spin} from 'antd';
 
 import './index.less';
 import DefineComponent from "../DefineComponent";
-import {classNames, getProps} from "wangct-util";
+import {classNames, getProps} from "@wangct/util";
 
 /**
  * 加载中组件

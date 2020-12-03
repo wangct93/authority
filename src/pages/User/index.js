@@ -15,7 +15,7 @@ import {
 import EditDrawer, {roleListDic} from "./EditDrawer";
 import * as userApi from '../../db/user';
 import {Button, Dropdown, Menu, message} from "antd";
-import {toAry,aryToObject,isDef} from "afc-browser-util";
+import {toAry,aryToObject,isDef} from "@wangct/util";
 import {userNameFormatter} from "../../utils/formatter";
 import {AuthButton} from "afc-basic-element-browser";
 import ResetPswDrawer from "./ResetPswDrawer";

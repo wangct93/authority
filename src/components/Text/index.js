@@ -4,7 +4,7 @@
 import React from 'react';
 import Icon from '../Icon';
 import './index.less';
-import {classNames, getProps, isDef, isString} from "wangct-util";
+import {classNames, getProps, isDef, isString} from "@wangct/util";
 import {getItemText, getItemValue} from "../common/util";
 import DefineComponent from "../DefineComponent";
 

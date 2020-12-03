@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from 'antd';
-import {getProps, toPromise} from "wangct-util";
+import {getProps, toPromise} from "@wangct/util";
 import DefineComponent from "../DefineComponent";
 
 /**

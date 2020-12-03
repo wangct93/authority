@@ -4,7 +4,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import PathToRegExp from 'path-to-regexp';
-import {classNames, getProps} from "wangct-util";
+import {classNames, getProps} from "@wangct/util";
 
 export default @connect(({global}) => ({
   pathname:global.pathname,

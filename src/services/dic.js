@@ -2,7 +2,7 @@
 import {getFixedNodeId} from '../utils/util';
 import { getFormatterByFields, onceRequest, promiseCache, request, strEqual } from "afc-basic-element-browser";
 import requestAuth, {onceRequestAuth} from "./auth";
-import {toAry} from "afc-browser-util";
+import {toAry} from "@wangct/util";
 import * as roleApi from "./role";
 export function t() {
 

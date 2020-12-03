@@ -1,8 +1,8 @@
 
 import {downloadBlob} from "../../utils/export";
-import {isDef,loop} from "afc-browser-util";
+import {isDef,loop} from "@wangct/util";
 import {aryToObject, showLoading} from "afc-basic-element-browser";
-import {toAry} from "afc-browser-util";
+import {toAry} from "@wangct/util";
 
 const colWidths = {
   trafficker_name:30,

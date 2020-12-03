@@ -12,7 +12,7 @@ module.exports = {
   routes:[
     {
       path:'/',
-      component:'Layout'
+      component:'Layout',
     }
   ],
   dynamicImport:true,

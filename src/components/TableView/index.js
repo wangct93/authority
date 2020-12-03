@@ -11,7 +11,7 @@ import {
   isDef,
   callFunc,
   isFunc, classNames, isObject, aryToObject, toPromise, proParse, objFind
-} from 'wangct-util';
+} from '@wangct/util';
 
 export default class TableView extends React.PureComponent{
 

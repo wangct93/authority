@@ -4,7 +4,7 @@ import './index.less';
 import {Pagination} from 'antd';
 import {connect} from 'react-redux';
 
-import {callFunc, classNames, getProps, isDef} from 'wangct-util';
+import {callFunc, classNames, getProps, isDef} from '@wangct/util';
 
 export default class PaginationCap extends React.PureComponent {
   state = {
