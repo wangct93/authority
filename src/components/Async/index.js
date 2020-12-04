@@ -2,7 +2,11 @@
  * Created by wangct on 2019/2/1.
  */
 import React, {PureComponent} from 'react';
+import Loading from "../Loading";
 
+/**
+ * 异步加载
+ */
 export default class Async extends PureComponent {
     state = {};
 
@@ -22,7 +26,7 @@ export default class Async extends PureComponent {
     }
 
     getLoadingView(){
-      return this.props.loading || <p>loading...</p>
+      return this.props.loading || <Loading loading />;
     }
 
     render() {

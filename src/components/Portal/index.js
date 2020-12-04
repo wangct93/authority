@@ -2,9 +2,9 @@ import DefineComponent from "../DefineComponent";
 import {createPortal} from "react-dom";
 
 /**
- * body布局
+ * 门户
  */
-export default class PortalMod extends DefineComponent {
+export default class Portal extends DefineComponent {
 
   state = {
     container:null,
@@ -21,7 +21,7 @@ export default class PortalMod extends DefineComponent {
   removeElem(){
     const {container} = this;
     if(container){
-      document.body.removeChild(container);
+      container.parentNode.removeChild(container);
     }
   }
 
@@ -37,7 +37,7 @@ export default class PortalMod extends DefineComponent {
   }
 
   render() {
-    const {container} = this.state;
+    const container = this.getProp('container');
     return container && createPortal(this.props.children,container);
   }
 }

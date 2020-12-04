@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {  Select} from 'antd';
 
-import {toPromise, validateArray, equal, getProps, callFunc, toArray} from "wangct-util";
+import {toPromise, validateArray, equal, getProps, callFunc, toArray} from "@wangct/util";
 import {getItemText, getItemValue} from "../common/util";
 
 export class QuerySelect extends PureComponent {

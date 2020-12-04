@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import { Input} from 'antd';
 
-import {getProps,callFunc} from "wangct-util";
+import {getProps,callFunc} from "@wangct/util";
 
 
 export default class InputCap extends PureComponent {

@@ -3,14 +3,23 @@
  */
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
+import {toAry} from "@wangct/util/lib/arrayUtil";
 
-export default @connect(({user = {}}) => ({
-  auths:user.auths
+/**
+ * 权限控制
+ */
+@connect(({user = {}}) => ({
+  authMap:user.authMap
 }))
-class Auth extends PureComponent{
+export default class Auth extends PureComponent{
   check(){
-    const {auths = [],or,and,check} = this.props;
-    return check ? check(auths) : (!and || and.every(item => auths.includes(item))) && (!or || or.some(item => auths.includes(item)));
+    const {authMap = {},or,and,check} = this.props;
+    if(check){
+      return check(authMap);
+    }
+    const andBol = !and || toAry(and).length === 0 || and.every(item => authMap[item]);
+    const orBol = !or || toAry(or).length === 0 || or.some(item => authMap[item]);
+    return andBol && orBol;
   }
 
   getNoAuth(){
@@ -19,12 +28,21 @@ class Auth extends PureComponent{
   }
 
   render(){
-    return this.check() ? this.props.children : this.getNoAuth()
+    return this.check() ? this.props.children : this.getNoAuth();
   }
 }
 
-Auth.auth = (option) => (Com) => {
-  return (props) => <Auth {...option}>
-    <Com {...props} />
-  </Auth>
-};
+/**
+ * 权限修饰器
+ */
+function auth(options = {}){
+    return (Com) => {
+      return (props) => {
+        return <Auth {...options}>
+          <Com {...props} />
+        </Auth>
+      };
+    }
+}
+
+Auth.auth = auth;

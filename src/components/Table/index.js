@@ -3,7 +3,7 @@ import React from "react";
 import {aryToObject, classNames, random, toAry, toNum, toStr} from "@wangct/util";
 import Form from "../Form";
 import BtnList from "../BtnList";
-import {getProps, isFunc, objFind, showLoading, toPromise} from "wangct-util";
+import {getProps, isFunc, objFind, showLoading, toPromise} from "@wangct/util";
 import {message, Pagination} from "antd";
 
 const columns = [

@@ -10,13 +10,11 @@ import DefineComponent from "../DefineComponent";
 export default class Flex extends DefineComponent {
 
   state = {
-    options:[]
   };
-
 
   render() {
     const {props} = this;
-    return <div className={classNames(css.flex,props.className,props.column && css.flex_column)} style={props.style}>{props.children}</div>;
+    return <div className={classNames('w-flex',props.className,props.column && 'w-flex-column')} style={props.style}>{props.children}</div>;
   }
 }
 
@@ -29,7 +27,7 @@ export class FlexItem extends DefineComponent {
 
   render() {
     const {props} = this;
-    return <div className={classNames(css.flex_item,props.className)} style={props.style}>{props.children}</div>;
+    return <div className={classNames('w-flex-item',props.className)} style={props.style}>{props.children}</div>;
   }
 }
 

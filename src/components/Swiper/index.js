@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {Icon} from 'antd';
-import {callFunc, classNames, getProps, toArray} from 'wangct-util';
+import {callFunc, classNames, getProps, toArray} from '@wangct/util';
 import './index.less';
 
 

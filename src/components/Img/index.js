@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {aryRemove, callFunc, getProps, Queue} from 'wangct-util';
+import {aryRemove, callFunc, getProps, Queue} from '@wangct/util';
 
 const list = [];
 const imgMap = new Map();

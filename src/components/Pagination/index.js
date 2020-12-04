@@ -1,12 +1,13 @@
 import React from 'react';
-
 import './index.less';
-import {Pagination} from 'antd';
-import {connect} from 'react-redux';
+import {Pagination as PaginationMod} from 'antd';
+import {callFunc, classNames, getProps, isDef} from '@wangct/util';
+import DefineComponent from "../DefineComponent";
 
-import {callFunc, classNames, getProps, isDef} from 'wangct-util';
-
-export default class PaginationCap extends React.PureComponent {
+/**
+ * 分页
+ */
+export default class Pagination extends DefineComponent {
   state = {
     current:1,
     pageSize:20,
@@ -27,12 +28,12 @@ export default class PaginationCap extends React.PureComponent {
   };
 
   render(){
-    return <div className="wct-pagination">
-      <Pagination
-        {...getProps(this)}
-        onShowSizeChange={this.onChange}
-        onChange={this.onChange}
-      />
-    </div>
+    const props = getProps(this);
+    return <PaginationMod
+      {...props}
+      className={classNames('w-pagination',props.className)}
+      onShowSizeChange={this.onChange}
+      onChange={this.onChange}
+    />;
   }
 }

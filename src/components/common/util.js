@@ -1,4 +1,4 @@
-import {getProps} from 'wangct-util';
+import {getProps} from '@wangct/util';
 
 
 export function getItemText(target,item){

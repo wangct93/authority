@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import { Tree,Input} from 'antd';
-import {callFunc, getProps, toPromise, validateArray} from "wangct-util";
+import {callFunc, getProps, toPromise, validateArray} from "@wangct/util";
 
 const {TreeNode} = Tree;
 
