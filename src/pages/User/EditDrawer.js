@@ -12,12 +12,12 @@ import * as dicApi from '../../db/dic';
 import * as roleApi from '../../db/authorityRole';
 import {Button,  Input, Transfer, TreeSelect} from "antd";
 import * as React from "react";
-import {callFunc} from "afc-browser-util";
-import {getProps} from "afc-browser-util";
-import {toAry} from "afc-browser-util";
+import {callFunc} from "@wangct/util";
+import {getProps} from "@wangct/util";
+import {toAry} from "@wangct/util";
 import moment from 'moment';
 import {userNameFormatter} from "../../utils/formatter";
-import {toPromise} from "afc-browser-util";
+import {toPromise} from "@wangct/util";
 import DefineComponent from "../../components/DefineComponent";
 
 /**

@@ -7,19 +7,25 @@ import {isStr} from "@wangct/util/lib/typeUtil";
 import React from "react";
 import Form from "../components/Form";
 import {Modal} from "antd";
+import {addFragment, removeFragment} from "../frame";
 
-
-export function showModal(options = {}) {
+/**
+ * 打开弹窗
+ * @param options
+ * @returns {{close: close}}
+ */
+export function openModal(options = {}) {
   options = {
     width: 400,
     ...options,
   };
   const close = () => {
+    removeFragment(target);
   };
 
   function onOk() {
     const contentElem = getElem();
-    if(!contentElem){
+    if (!contentElem) {
       return;
     }
     let pro;
@@ -36,8 +42,9 @@ export function showModal(options = {}) {
     });
   }
 
-  const { component,content: Com = component} = options;
+  const {component, content: Com = component} = options;
   let elem = null;
+
   function setElem(com) {
     elem = com;
   }
@@ -48,32 +55,25 @@ export function showModal(options = {}) {
 
   const content = Com
     ? <Com targetRef={setElem} contentRef={setElem} ref={setElem} {...options.contentProps} />
-: <Form
-  ref={setElem}
-  {...options.formProps}
-  options={options.options}
-  defaultValue={options.value}
-  />;
-  const extProps = {};
-  if(options.okText){
-    extProps.okText = options.okText;
-  }
-  const viewTarget = <Modal
-  title={options.title}
-  visible
-  onCancel={close}
-  width={options.width}
-  key={random()}
-  onOk={options.onOk && onOk}
-  className={options.className}
-  {...extProps}
-  {...options.modalProps}
->
-  {content}
-</Modal>;
-  addFragment()
-
-  updateViewList([...fragViewList, viewTarget]);
+    : <Form
+      options={options.options}
+      defaultValue={options.value}
+      {...options.contentProps}
+      ref={setElem}
+    />;
+  const target = <Modal
+    title={options.title}
+    visible
+    onCancel={close}
+    width={options.width}
+    key={random()}
+    onOk={options.onOk && onOk}
+    className={options.className}
+    {...options.modalProps}
+  >
+    {content}
+  </Modal>;
+  addFragment(target);
   return {
     close,
   };

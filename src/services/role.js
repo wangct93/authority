@@ -1,59 +1,44 @@
-import { request as requestFunc ,getSessionUser} from 'afc-basic-element-browser';
-import requestAuth from "./auth";
+import {requestApi} from "../frame";
 
-export const APIhost = '/api';
-export function request(url, ...args) {
-    return requestFunc(APIhost + url, ...args);
-}
-
-export function formatTable(data = {}) {
-    //@ts-ignore
-    const { total = 0 } = data;
-    return {
-        ...data,
-        total_count: total
-    }
-}
-//查询
-export function search(params) {
-    return requestAuth(`/role/query`, {
-        method: 'post',
+/**
+ * 查询
+ * @author wangchuitong
+ */
+export function roleSearch(params) {
+    return requestApi(`/role/search`, {
         body: params
     })
 }
 
-//增加单条数据
-export function create(params) {
-    return requestAuth(`/role/create`, {
-        method: 'post',
+/**
+ * 增加单条数据
+ * @author wangchuitong
+ */
+export function roleCreate(params) {
+    return requestApi(`/role/create`, {
+        body: params,
+    });
+}
+
+/**
+ * 编辑
+ * @author wangchuitong
+ */
+export function roleUpdate(params) {
+    return requestApi(`/role/update`, {
+        body: params
+    })
+}
+
+/**
+ * 删除单条数据
+ * @author wangchuitong
+ */
+export function roleDelete(role_id) {
+    return requestApi(`/role/delete`, {
         body: {
-            menu_list:params.menu_list,
-          ...params,
+          role_id,
         }
-    })
-}
-
-//根据角色编号查询单条数据
-export function getById(params) {
-    return requestAuth(`/role/findById?role_id=${params.role_id}`, {
-        method: 'post',
-        // body: params
-    })
-}
-
-//编辑单条数据
-export function update(params) {
-    return requestAuth(`/role/update`, {
-        method: 'post',
-        body: params
-    })
-}
-
-//删除单条数据
-export function deleteItem(params) {
-    return requestAuth(`/role/delete?role_id=${params.role_id}`, {
-        method: 'post',
-        // body: params
     })
 }
 
@@ -61,8 +46,10 @@ export function deleteItem(params) {
  * 根据用户ID获取角色列表
  * @author wangchuitong
  */
-export function doGetRolesByUserId() {
-    return requestAuth(`/role/findRolesByUserId?user_id=` + getSessionUser().userId, {
-        method: 'post',
+export function getRolesByUserId(user_id) {
+    return requestApi(`/role/findRolesByUserId`, {
+      body:{
+        user_id,
+      }
     });
 }

@@ -10,7 +10,7 @@ import {
 
  } from "afc-basic-element-browser";
 import { generateMenuTreeToArray, findChildMenuTypeByMenuId } from '../../utils/util';
-import {toAry} from 'afc-browser-util';
+import {toAry} from '@wangct/util';
 import { ModalType, GetHandType } from "../../utils/options";
 import moment from 'moment';
 import DefineComponent  from "../../components/DefineComponent";

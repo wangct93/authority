@@ -8,7 +8,12 @@ import {callFunc, equal} from "@wangct/util/lib/util";
 export default class DefineComponent extends PureComponent {
 
   componentDidMount() {
+  }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+  }
+
+  componentWillUnmount() {
   }
 
   checkProp(prevProps,field,func){
@@ -133,6 +138,13 @@ export default class DefineComponent extends PureComponent {
 
   getColumns(){
     return toAry(this.getProp('columns'));
+  }
+
+  initValue(){
+    const defaultValue = this.getProp('defaultValue');
+    if(this.getProp('value') == null && defaultValue != null){
+      this.onChange(defaultValue);
+    }
   }
 
 }
