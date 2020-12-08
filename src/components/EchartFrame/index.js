@@ -1,11 +1,16 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {callFunc, getProps} from "@wangct/util";
+import DefineComponent from "../DefineComponent";
+import {getResizeSign} from "../../frame";
 
-@connect(({global}) => ({
-  resizeSign:global.resizeSign,
+/**
+ * echart框架
+ */
+@connect(() => ({
+  resizeSign:getResizeSign(),
 }))
-export default class EchartFrame extends PureComponent {
+export default class EchartFrame extends DefineComponent {
 
   componentDidMount() {
     this.drawEchart();
@@ -20,7 +25,7 @@ export default class EchartFrame extends PureComponent {
     if(!chart){
       return;
     }
-    callFunc(this.props.draw,chart,getProps(this).data,this.getElem());
+    callFunc(this.props.onDraw,chart,this.props.data,this.getElem());
     chart.resize();
   }
 
@@ -30,28 +35,15 @@ export default class EchartFrame extends PureComponent {
       return chart;
     }
     const elem = this.getElem();
-    const {echarts} = getProps(this);
-    if(!elem || !echarts){
+    const {echarts} = this.props;
+    if(!echarts){
       return;
     }
-
     this.chart = echarts.init(elem);
     return this.chart;
   }
 
-  setElem = (ref) => {
-    this.elem = ref;
-  }
-
-  getElem(){
-    return this.elem;
-  }
-
-  getDivProps(){
-    return getProps(this,['echarts','draw','resizeSign','dispatch']);
-  }
-
   render(){
-    return <div ref={this.setElem} {...this.getDivProps()} />;
+    return <div ref={this.setElem} className={this.props.className} style={this.props.style} />;
   }
 }

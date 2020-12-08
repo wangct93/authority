@@ -1,95 +1,83 @@
-import requestAuth from "./auth";
-import exportUser from "../routes/User/export";
-
-/**
- * 用户接口
- * @author wangchuitong
- */
-export function requestUser(url,options = {},...args){
-  return requestAuth('/user' + url,{
-    method:'post',
-    ...options,
-  });
-}
-
-/**
- * post请求
- * @author wangchuitong
- */
-function post(url,params = {},...args){
-  return requestUser(url,{
-    body:params,
-  },...args);
-}
+import {requestApi} from "../frame";
 
 /**
  * 查询
  * @author wangchuitong
  */
-export function doSearch(params){
-  return post('/query',params);
+export function userSearch(params){
+  return requestApi('/user/search',{
+    body:params,
+  });
 }
 
 /**
  * 新增
  * @author wangchuitong
  */
-export function doCreate(params){
-  return post('/create',params);
+export function userCreate(params){
+  return requestApi('/user/create',{
+    body:params,
+  });
 }
 
 /**
  * 编辑
  * @author wangchuitong
  */
-export function doEdit(params){
-  return post('/update',params);
-}
-
-/**
- * 重置密码
- * @author wangchuitong
- */
-export function doResetPsw(params){
-  return post('/resetPwd',params);
+export function userUpdate(params){
+  return requestApi('/user/update',{
+    body:params,
+  });
 }
 
 /**
  * 获取用户详情
  * @author wangchuitong
  */
-export function doGetInfo(userId){
-  return requestUser('/findById?user_id=' + userId);
+export function userGetInfo(user_id){
+  return requestApi('/user/getInfo',{
+    body:{
+      user_id,
+    }
+  });
 }
 
 /**
  * 删除
  * @author wangchuitong
  */
-export function doDelete(userId){
-  return requestUser('/delete?user_id=' + userId);
+export function userDelete(user_id){
+  return requestApi('/user/delete',{
+    body:{
+      user_id,
+    },
+  });
 }
 
 /**
  * 导出
  * @author wangchuitong
  */
-export function doExport(){
-  return post('/exportUser').then((data) => exportUser(data));
+export function userExport(){
+  return requestApi('/user/exportUser');
 }
 
 /**
  * 导入
  * @author wangchuitong
  */
-export function doImport(params){
-  return post('/importUser',params);
+export function userImport(params){
+  return requestApi('/user/import',{
+    body:params,
+  });
 }
 
 /**
  * 全量导入
  * @author wangchuitong
  */
-export function doImportAll(params){
-  return post('/importAllUser',params);
+export function userImportAll(params){
+  return requestApi('/user/importAllUser',{
+    body:params,
+  });
 }

@@ -1,51 +1,51 @@
 /**
  * Created by wangct on 2019/1/19.
  */
-import React, {PureComponent} from 'react';
-
+import React from 'react';
 import {callFunc, classNames, getProps, isDef} from "@wangct/util";
-import {Button, Upload} from "antd";
-import './index.less';
+import DefineComponent from "../DefineComponent";
+import Btn from "../Btn";
 
-export default class UploadCap extends PureComponent {
+/**
+ * 上传组件
+  */
+export default class Upload extends DefineComponent {
 
   state = {
-    listType:'picture'
   };
 
-  onChange = (opt) => {
-    let {fileList} = opt;
-    const {limit} = this.props;
-    if(isDef(limit)){
-      fileList = fileList.slice(-limit);
+  getChildren(){
+    const {children} = this.props;
+    if(children){
+      const child = React.Children.only(this.props.children);
+      return React.cloneElement(child,{
+        onClick:this.doClick,
+      });
     }
-    this.setState({
-      value:fileList
-    });
-    callFunc(this.props.onChange,fileList,opt);
+    return <Btn onClick={this.doClick} type="primary" icon="upload">上传图片</Btn>;
+  }
+
+  inputChange = (e) => {
+    const {files} = e.target;
+    const value = this.isMultiple() ? Array.from(files) : files[0];
+    this.onChange(value);
+    e.target.value = null;
   };
 
-  getValue(){
-    return getProps(this).value;
-  }
+  doClick = () => {
+    this.getElem().click();
+  };
 
-  getUploadProps(){
-    return getProps(this,['value']);
-  }
-
-  getTriggerTarget(){
-    const {children} = getProps(this);
-    return isDef(children) ? children : <Button type="primary" icon="upload">上传图片</Button>
+  isMultiple(){
+    return this.props.multiple;
   }
 
   render() {
-    return <Upload
-      {...this.getUploadProps()}
-      className={classNames('wct-upload-box',this.props.className)}
-      onChange={this.onChange}
-      fileList={this.getValue()}
-    >
-      {this.getTriggerTarget()}
-    </Upload>
+    return <React.Fragment>
+      {
+        this.getChildren()
+      }
+      <input {...this.props} multiple={this.isMultiple()} ref={this.setElem} type="file" onChange={this.inputChange} />
+    </React.Fragment>
   }
 }

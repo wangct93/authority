@@ -8,7 +8,6 @@ import MenuPage from "../Menu";
 
 export default class Layout extends PureComponent {
   render() {
-    console.log(this.props);
     return <div className={css.container}>
       <Header />
       <div className={css.body}>

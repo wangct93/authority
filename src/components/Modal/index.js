@@ -1,32 +1,38 @@
-import React, {PureComponent} from 'react';
-import {Modal} from 'antd';
+import React from 'react';
+import {Modal as ModalMod} from 'antd';
 import {getProps, callFunc, classNames} from "@wangct/util";
 import './index.less';
+import DefineComponent from "../DefineComponent";
+import {toPromise} from "@wangct/util/lib/promiseUtil";
 
-export default class WctModal extends PureComponent {
+/**
+ * 弹窗
+ */
+export default class Modal extends DefineComponent {
 
   state = {
-    maskClosable:false
+    maskClosable:true,
   };
 
   onOk = (...args) => {
     this.setState({
       confirmLoading:true
     });
-    Promise.resolve(callFunc(this.props.onOk,...args)).finally(() => {
+    return toPromise(this.props.onOk,...args).finally(() => {
       this.setState({
         confirmLoading:false
-      })
+      });
     });
   };
 
   render() {
-    return <Modal
-      {...getProps(this,['children'])}
-      wrapClassName={classNames('wct-modal-wrap',this.props.wrapClassName)}
-      onOk={this.onOk}
+    const props = getProps(this);
+    return <ModalMod
+      {...props}
+      wrapClassName={classNames('w-modal',this.props.wrapClassName)}
+      onOk={props.onOk && this.onOk}
     >
-      <div className="wct-modal-content" style={{maxHeight:window.innerHeight - 300}}>{this.props.children}</div>
-    </Modal>
+      this.props.children
+    </ModalMod>
   }
 }

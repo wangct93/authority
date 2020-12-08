@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs} from 'antd';
+import { Tabs as TabsMod} from 'antd';
 import {connect} from 'react-redux';
 import "./index.less";
 import {callFunc, classNames, getProps, isDef, isFunc, pathJoin, strEqual} from "@wangct/util";
@@ -11,7 +11,7 @@ import DefineComponent from "../DefineComponent";
 @connect(({global}) => ({
   pathname:global.pathname,
 }))
-export default class TabsMod extends DefineComponent{
+export default class Tabs extends DefineComponent{
 
   state = {
     options:[],
@@ -80,7 +80,7 @@ export default class TabsMod extends DefineComponent{
   render() {
     const {props} = this;
     const options = this.getOptions();
-    return !!options.length && <Tabs
+    return <TabsMod
       {...props}
       activeKey={this.getActiveKey()}
       onChange={this.tabChange}
@@ -95,16 +95,10 @@ export default class TabsMod extends DefineComponent{
           </Tabs.TabPane>;
         })
       }
-    </Tabs>;
+    </TabsMod>;
   }
 }
 
-/**
- * 路径匹配
- * @param optPath
- * @param pathname
- * @returns {boolean}
- */
-function matchPath(optPath,pathname){
-  return (pathname + '/').startsWith(optPath + '/');
+function getKey(){
+
 }

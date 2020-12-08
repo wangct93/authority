@@ -1,8 +1,8 @@
 
 import { NodeType } from "./options";
-import { toStr } from "afc-browser-util";
+import { toStr } from "@wangct/util";
 import { getGlobalState ,setDicApi} from "afc-basic-element-browser";
-import {toAry,aryToObject} from 'afc-browser-util';
+import {toAry,aryToObject} from '@wangct/util';
 import * as dicApi from '../db/dic';
 
 initConfig();

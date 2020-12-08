@@ -19,51 +19,40 @@ export default class AsyncVisual extends PureComponent {
   }
 
   componentDidUpdate(prevProps,prevState){
-    this.checkElem(prevProps,prevState);
+    this.checkScrollElem(prevProps,prevState);
   }
 
-  checkElem(prevProps){
-    const oldElem = this.getElem(prevProps);
-    const elem = this.getElem();
-    if(oldElem !== elem){
-      this.removeEvent(oldElem);
+  checkScrollElem(prevProps){
+    const oldScrollElem = this.getScrollElem(prevProps);
+    if(oldScrollElem !== this.getScrollElem()){
+      this.removeEvent(oldScrollElem);
       this.addEvent();
     }
   }
 
-  getElem(props = getProps(this)){
-    if(props.useWin){
-      return window;
-    }
-    const {elem} = this;
-    return elem && elem.parentNode;
-  }
-
-  addEvent(elem = this.getElem()){
+  addEvent(elem = this.getScrollElem()){
+    this.removeEvent(elem);
     elem.addEventListener('scroll',this.scrollEvent);
   }
 
-  removeEvent(elem = this.getElem()){
+  removeEvent(elem = this.getScrollElem()){
     elem.removeEventListener('scroll',this.scrollEvent);
   }
 
   scrollEvent = (e) => {
-    const {top,left,right,bottom} = this.elem.getBoundingClientRect();
+    const {top,left,right,bottom} = this.getElem().getBoundingClientRect();
     if(!(right < 0 || bottom < 0 || left > window.innerWidth || top > window.innerHeight)){
-      this.onShow(e);
+      this.removeEvent();
+      callFunc(this.props.onShow,e);
     }
   };
 
-  onShow(e){
-    this.removeEvent();
-    callFunc(this.props.onShow,e);
+  getScrollElem(props = this.props){
+    return props.scrollElem || window;
   }
 
-  setElem = (ref) => {
-    this.elem = ref;
-  };
-
   render() {
-    return <div ref={this.setElem} />
+    const {props} = this;
+    return <div className={props.className} style={props.style} ref={this.setElem}>{props.children}</div>;
   }
 }

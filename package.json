@@ -14,6 +14,7 @@
     "@wangct/util": "^1.0.3",
     "@wangct/webpack": "^1.0.0",
     "antd": "^3.26.20",
+    "moment": "^2.29.1",
     "react": "^16.14.0",
     "wangct-react": "^1.0.26"
   },

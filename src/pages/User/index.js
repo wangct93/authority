@@ -1,28 +1,17 @@
 import React from 'react';
-
-// @ts-ignore
-import css from './index.less';
-import  DefineComponent from "../../components/DefineComponent";
-import {AfcUpload, DelConfirm, TableView} from "afc-basic-element-browser";
-import {
-  colTimeWidth, FilterInput,
-  getDicStateRender, getFormatter,
-  getTestLoadData, getUserInfo,
-  setDicOptions, showEditPassword,
-  showLoading, textOverflowRender,
-  UserInput
-} from "afc-basic-element-browser";
-import EditDrawer, {roleListDic} from "./EditDrawer";
-import * as userApi from '../../db/user';
+import DefineComponent from "../../components/DefineComponent";
+import EditDrawer, {PswInput, roleListDic} from "./EditDrawer";
 import {Button, Dropdown, Menu, message} from "antd";
 import {toAry,aryToObject,isDef} from "@wangct/util";
 import {userNameFormatter} from "../../utils/formatter";
-import {AuthButton} from "afc-basic-element-browser";
-import ResetPswDrawer from "./ResetPswDrawer";
-import auths from "../../json/auths";
-import {ModalType} from "../../utils/options";
-import * as dicApi from "../../db/dic";
 import {colUserIdWidth, colUserNameWidth} from "../../utils/columns";
+import css from './index.less';
+import Auth from "../../components/Auth";
+import {openModal, showModal} from "../../utils/frameUtil";
+import {dicRoleList, dicUserEnableMark} from "../../services/dic";
+import DateStringPicker from "../../components/DateStringPicker";
+import moment from 'moment';
+import {userUpdate} from "../../services/user";
 
 /**
  * 用户界面
@@ -55,28 +44,24 @@ export default class UserPage extends DefineComponent {
       },
       {
         title:'是否启用',
-        dataIndex:'status',
-        render:getDicStateRender(this,'userEnableMark'),
+        dataIndex:'status_name',
       },
       {
         title:'创建时间',
         dataIndex:'create_time',
-        width:colTimeWidth,
       },
       {
         title:'更新时间',
         dataIndex:'update_time',
-        width:colTimeWidth,
       },
       {
         title: '操作',
         dataIndex: 'op',
         width:100,
         render:(v,row) => {
-          return <AuthButton auth={auths.userUpdate} render={(props) => {
-          return <a onClick={this.doEdit.bind(this,row)}>{props.title || '编辑'}</a>;
-          }
-          } />;
+          return <Auth>
+            <a onClick={this.doEdit.bind(this,row)}>编辑</a>
+          </Auth>;
         },
       },
     ],
@@ -84,76 +69,38 @@ export default class UserPage extends DefineComponent {
       {
         title:'用户编号',
         field:'user_id',
-        component:UserInput,
+        component:'input',
       },
       {
         title:'用户名称',
         field:'user_name',
-        component:FilterInput,
-        formatter:userNameFormatter,
+        component:'input',
       },
     ],
-    drawer:{},
-    resetPswDrawer:{},
-    rowSelection:{
-      onChange:this.rowSelectionChange.bind(this),
-      type:'radio',
-    },
   };
 
   doEdit = (row) => {
-    const pro = Promise.all([roleListDic()]);
-    showLoading(pro).then(([roleDic]) => {
-      const roleMap = aryToObject(roleDic,'text');
-      const roleIds = toAry(row.role_name_list).map((item) => {
-        const target = roleMap[item];
-        return target && target.value;
-      }).filter((item) => isDef(item));
-      this.updateField('drawer',{
-        visible:true,
-        isCreate:false,
-        data:{
-          ...row,
-          role_list:roleIds,
-        },
-      });
+    openModal({
+      title:'用户编辑',
+      options:getFormOptions(false),
+      value:row,
+      onOk:(data) => {
+        userUpdate(data).then(() => {
+          message.success('编辑成功');
+        });
+      },
     });
 
   };
-
-  componentDidMount(): void {
-    setDicOptions(this,['userEnableMark']);
-  }
-
-  getImportMenu(){
-    return <Menu className={css.dropdown_import_content}>
-      <Menu.Item>
-        <AuthUpload title="增量导入" onChange={this.doImport} function={auths.userImport} />
-      </Menu.Item>
-      <Menu.Item>
-        <AuthUpload title="全量导入" onChange={this.doAllImport} function={auths.userImportAll} />
-      </Menu.Item>
-    </Menu>;
-  }
 
   getBtn(){
     return [
       {
         title: '新增',
-        function:auths.userCreate,
-        onClick:this.openDrawer,
+        onClick:this.openAddModal,
       },
-      // {
-      //   title: '编辑',
-      //   function:auths.userUpdate,
-      //   onClick:this.openDrawer.bind(this,false),
-      //   props:{
-      //     disabled:!this.hasSelect(),
-      //   },
-      // },
       {
         title: '重置密码',
-        function:auths.userResetPsw,
         onClick:this.openResetPswDrawer,
         props:{
           disabled:!this.hasSelect(),
@@ -191,10 +138,6 @@ export default class UserPage extends DefineComponent {
     });
   }
 
-  getSelectedRow(){
-    return this.getSelectedRows()[0];
-  }
-
   /**
    * 删除
    * @author wangchuitong
@@ -203,42 +146,6 @@ export default class UserPage extends DefineComponent {
     const row = this.getSelectedRows()[0];
     showLoading(userApi.doDelete(row.user_id)).then(() => {
       message.success('删除成功');
-      this.tableReload();
-    });
-  };
-
-  /**
-   * 导出方法
-   * @author wangchuitong
-   */
-  doExport(){
-    showLoading(userApi.doExport()).then(() => {
-      message.success('导出成功');
-    });
-  }
-
-  /**
-   * 导入方法
-   * @author wangchuitong
-   */
-  doImport = (file) => {
-    const formData = new FormData();
-    formData.append('file',file);
-    showLoading(userApi.doImport(formData)).then(() => {
-      message.success('导入成功');
-      this.tableReload();
-    });
-  };
-
-  /**
-   * 全量导入方法
-   * @author wangchuitong
-   */
-  doAllImport = (file) => {
-    const formData = new FormData();
-    formData.append('file',file);
-    showLoading(userApi.doImportAll(formData)).then(() => {
-      message.success('导入成功');
       this.tableReload();
     });
   };
@@ -300,19 +207,64 @@ export default class UserPage extends DefineComponent {
 }
 
 /**
- * 导入权限组件
- * @author wangchuitong
+ * 获取表单配置项
+ * @param isCreate
+ * @returns {*[]}
  */
-class AuthUpload extends DefineComponent {
-  state = {};
-
-  contentRender(props){
-    return <AfcUpload {...props}>
-      <a type="primary">{props.title}</a>
-    </AfcUpload>;
-  }
-
-  render() {
-    return <AuthButton {...this.props} render={this.contentRender} />;
-  }
+function getFormOptions(isCreate) {
+  return [
+    {
+      title: '用户编号',
+      field: 'user_id',
+      component: 'input',
+      props: {
+        disabled: !isCreate,
+      },
+      required: true,
+    },
+    {
+      title: '用户名称',
+      field: 'user_name',
+      component: 'input',
+      required: true,
+    },
+    {
+      title: '用户密码',
+      field: 'user_pwd',
+      component: 'input',
+      props: {
+        type: 'password',
+      },
+      required: true,
+      show: () => this.isCreate(),
+    },
+    {
+      title: '有效日期',
+      field: 'effect_date_time',
+      component: DateStringPicker,
+      props: {
+        showTime: true,
+        defaultValue: moment().add(10, 'years').format('YYYY-MM-DD HH:mm:ss'),
+      },
+      required: true,
+    },
+    {
+      title: '是否启用',
+      field: 'status',
+      component: 'radio',
+      props: {
+        loadData: dicUserEnableMark,
+        initValueAfterFirstLoad: true,
+      },
+      required: true,
+    },
+    {
+      title: '角色选择',
+      field: 'roleIds',
+      component: 'select',
+      props: {
+        loadData: dicRoleList,
+      },
+    },
+  ]
 }
