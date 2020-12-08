@@ -1,6 +1,3 @@
-import {isStr} from "@wangct/util/lib/typeUtil";
-import {getGlobalConfig} from "./utils";
-
 const {fetch} = window;
 
 /**
@@ -20,36 +17,10 @@ export default function request(url, options = {}) {
       }else if(text){
         return res.text();
       }else if(json){
-        return res.json().then((data) => {
-          const {matchData = true,alertError = true} = options;
-          if(!matchData){
-            return data;
-          }
-          if(data.code !== 0){
-            if(alertError && isStr(data.message)){
-              message.error(data.message)
-            }
-            throw data.message;
-          }
-          return data.data;
-        });
+        return res.json();
       }
       return res;
-    }).catch(() => {
-      throw '请求失败';
-    });
-}
-
-/**
- * api请求
-  * @param url
- * @param options
- */
-export function requestApi(url,options = {}){
-  if(getGlobalConfig('isDev')){
-    return request('/api' + url,options);
-  }
-  return request(url,options);
+    })
 }
 
 
@@ -59,17 +30,14 @@ export function requestApi(url,options = {}){
  * @returns {*}
  */
 function formatOptions(options){
-  const {body,method = 'post'} = options;
+  const {body} = options;
   if(body && !(body instanceof FormData)){
-    if(options.formatBody !== false){
-      options.body = JSON.stringify(options.body);
-    }
+    options.body = JSON.stringify(options.body);
     options.headers = {
       ...options.headers,
       'content-type':'application/json'
     }
   }
-  options.method = method;
   return options;
 }
 

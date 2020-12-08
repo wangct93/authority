@@ -1,10 +1,9 @@
 import React, {PureComponent} from "react";
 import {Tabs} from 'antd';
 import css from './index.less';
-import {toAry} from "@wangct/util";
+import {pathJoin, toAry} from "@wangct/util";
 import {getPathname, reduxConnect} from "../../utils/state";
 import {getRoutes} from "../Router";
-import {pathJoin} from "../../utils/path";
 
 /**
  * 选项卡路由器

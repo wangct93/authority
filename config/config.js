@@ -13,6 +13,12 @@ module.exports = {
     {
       path:'/',
       component:'Layout',
+      children:[
+        {
+          path:'/menu',
+          component:'Menu',
+        }
+      ]
     }
   ],
   dynamicImport:true,

@@ -1,21 +1,76 @@
-import React, {PureComponent} from 'react';
-import {Header} from '../../components';
-
+import React from 'react';
 import css from './index.less';
-import {Button} from "antd";
-import {random} from "@wangct/util";
-import MenuPage from "../Menu";
+import Flex, {FlexItem} from "../../components/Flex";
+import DefineComponent from "../../components/DefineComponent";
+import DateView from "../../components/DateView";
+import {getPathname, pathMatch, pathTo, reduxConnect} from "../../frame";
+import {classNames} from "@wangct/util/lib/util";
 
-export default class Layout extends PureComponent {
+/**
+ * 布局
+ */
+export default class Layout extends DefineComponent {
   render() {
-    return <div className={css.container}>
+    return <Flex column className={css.container}>
       <Header />
-      <div className={css.body}>
+      <FlexItem>
         {
-          // this.props.children
+          this.props.children
         }
-        <MenuPage />
-      </div>
-    </div>
+      </FlexItem>
+    </Flex>
+  }
+}
+
+/**
+ * 头部
+ */
+class Header extends DefineComponent {
+  render() {
+    return <Flex className={css.header}>
+      <MenuList />
+      <FlexItem />
+      <DateView />
+    </Flex>
+  }
+}
+
+/**
+ * 菜单列表
+ */
+@reduxConnect(() => ({
+  pathname:getPathname(),
+}))
+class MenuList extends DefineComponent {
+  state = {
+    options:[
+      {
+        title:'菜单管理',
+        path:'/menu',
+      },
+      {
+        title:'角色管理',
+        path:'/role',
+      },
+      {
+        title:'用户管理',
+        path:'/user',
+      },
+    ]
+  };
+
+  onClick = (opt) => {
+    pathTo(opt.path);
+  };
+
+  render() {
+    return <Flex className={css.menu_list}>
+      {
+        this.getOptions().map((opt,index) => {
+          const active = pathMatch(opt.path,this.props.pathname);
+          return <div onClick={this.onClick.bind(this,opt)} key={index} className={classNames(css.menu_item,active && css.active)}>{opt.title}</div>
+        })
+      }
+    </Flex>
   }
 }

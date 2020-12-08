@@ -1,1 +1,1 @@
-import global_8lgjekbn1i from '../../models/global.js'; export default [global_8lgjekbn1i];
+import com_zhibazmj2 from '../../models/com.js'; export default [com_zhibazmj2];

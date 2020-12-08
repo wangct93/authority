@@ -51,10 +51,12 @@ export default class Table extends DefineComponent {
     columns,
     data:getTestData(columns),
     hasScroll:false,
+    fontSize:14,
   };
 
   componentDidMount() {
     this.checkScroll();
+    this.initFontSize();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -68,6 +70,12 @@ export default class Table extends DefineComponent {
         hasScroll,
       });
     }
+  }
+
+  initFontSize(){
+    this.setState({
+      fontSize:toNum(getComputedStyle(this.getElem()).fontSize),
+    });
   }
 
 
@@ -90,8 +98,9 @@ export default class Table extends DefineComponent {
 
   getTdStyle(col){
     const style = {};
-    if(col.width){
-      style.flex = `1 0 ${getCssValue(col.width)}`;
+    const width = this.getColWidth(col);
+    if(width){
+      style.flex = `1 0 ${getCssValue(width)}`;
     }
     return style;
   }
@@ -112,6 +121,15 @@ export default class Table extends DefineComponent {
     const header = this.getElem().querySelector('.w-table-tr');
     header.scrollLeft = target.scrollLeft;
   };
+
+  getColWidth(col){
+    const {title,width} = col;
+    return width ? width : toStr(title).length * this.getFontSize() + 20;
+  }
+
+  getFontSize(){
+    return this.getProp('fontSize') || 14;
+  }
 
   render() {
     const columns = this.getColumns();
@@ -173,6 +191,7 @@ export class TableSearch extends DefineComponent {
     pageSizeField:'page_size',
     totalField:'total',
     dataField:'list',
+    fit:true,
     pagination:{
       current:1,
       pageSize:20,
@@ -280,7 +299,11 @@ export class TableSearch extends DefineComponent {
   }
 
   isFit(){
-    return this.props.fit;
+    return this.getProp('fit');
+  }
+
+  hasPagin(){
+    return toNum(this.getPagination().total) > 0;
   }
 
   render() {
@@ -297,7 +320,9 @@ export class TableSearch extends DefineComponent {
         />
       </div>
       <div className="w-footer">
-        <Pagination {...this.getPagination()} onChange={this.pageChange} onShowSizeChange={this.pageChange} />
+        {
+          this.hasPagin() && <Pagination {...this.getPagination()} onChange={this.pageChange} onShowSizeChange={this.pageChange} />
+        }
       </div>
     </div>
   }

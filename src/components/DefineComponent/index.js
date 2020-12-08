@@ -7,14 +7,14 @@ import {callFunc, equal} from "@wangct/util/lib/util";
  */
 export default class DefineComponent extends PureComponent {
 
-  componentDidMount() {
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-  }
-
-  componentWillUnmount() {
-  }
+  // componentDidMount() {
+  // }
+  //
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  // }
+  //
+  // componentWillUnmount() {
+  // }
 
   checkProp(prevProps,field,func){
     if(!equal(prevProps[field],this.props[field])){

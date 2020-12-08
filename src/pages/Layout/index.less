@@ -1,14 +1,33 @@
 @import "../../styles/common";
 
-
-ul{
-  margin: 0;
-}
-
 .container{
-  padding-top: @headerHeight;
+  height: 100%;
 }
 
-.body{
-  flex:1;
+.header{
+  height:@headerHeight;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 0 20px;
+}
+
+.menu_item{
+  height: @headerHeight;
+  .flex_center();
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  margin-left: -1px;
+  padding: 0 20px;
+  &:first-child{
+    margin-left: 0;
+  }
+  cursor: pointer;
+  &:hover{
+    background-color: #eee;
+  }
+
+  &.active{
+    background-color: @activeColor;
+    color:#fff;
+  }
 }

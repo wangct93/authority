@@ -5,7 +5,8 @@ import {Provider} from "react-redux";
 import {ConfigProvider} from "antd";
 import ZHCN from "antd/lib/locale-provider/zh_CN";
 import TabRouter from "../TabRouter";
-import {getFragmentList, isTabRouter, reduxConnect, setRoutes} from "../../utils/state";
+import {getFrameState, reduxConnect} from "../../utils/state";
+import {setRoutes} from "../../utils/utils";
 import {pathJoin} from "../../utils/path";
 import history from '../../modules/history';
 
@@ -30,8 +31,8 @@ export default class RouterMod extends PureComponent {
  * 路由内容
  */
 @reduxConnect(({}) => ({
-  routes:getRoutes(),
-  isTabRouter:isTabRouter(),
+  routes:getFrameState().routes,
+  isTabRouter:getFrameState().isTabRouter
 }))
 class RouterContent extends PureComponent{
 
@@ -52,12 +53,12 @@ class RouterContent extends PureComponent{
  * 全局组件
  */
 @reduxConnect(() => ({
-  content:getFragmentList(),
+  fragmentList:getFrameState().fragmentList,
 }))
 class Fragment extends PureComponent {
   render() {
     return <React.Fragment>
-      {this.props.content}
+      {this.props.fragmentList}
     </React.Fragment>
   }
 }

@@ -1,20 +1,19 @@
 import {PureComponent} from "react";
 import {toAry, toPromise} from "@wangct/util";
-import {callFunc, equal} from "@wangct/util/lib/util";
 
 /**
  * 自定义组件
  */
 export default class DefineComponent extends PureComponent {
 
-  componentDidMount() {
-
-  }
-
-  checkProp(prevProps,field,func){
-    if(!equal(prevProps[field],this.props[field])){
-      callFunc.call(this,func);
-    }
+  updateState(type,value){
+    const [parentField,field] = type.split('.');
+    this.setState({
+      [parentField]:field ? {
+        ...this.state[parentField],
+        [field]:value,
+      } : value,
+    });
   }
 
   getOptions(){
@@ -23,6 +22,30 @@ export default class DefineComponent extends PureComponent {
 
   getValue(){
     return this.getProp('value');
+  }
+
+  loadOptions(){
+    const loadOptions = this.getProp('loadOptions');
+    if(!loadOptions){
+      return;
+    }
+    toPromise(loadOptions).then(options => {
+      this.setState({
+        options
+      });
+    });
+  }
+
+  loadData(){
+    const loadData = this.getProp('loadData');
+    if(!loadData){
+      return;
+    }
+    toPromise(loadData).then(data => {
+      this.setState({
+        data
+      });
+    })
   }
 
   getData(){
@@ -84,52 +107,7 @@ export default class DefineComponent extends PureComponent {
     if(key in this.props){
       return this.props[key];
     }
-    return this.getState()[key];
+    return this.state && this.state[key];
   }
-
-  getState(){
-    return this.state || {};
-  }
-
-  setForm = (form) => {
-    this.form = form;
-  };
-
-  getForm(){
-    return this.form;
-  }
-
-  formChange = (formValue) => {
-    this.setState({
-      formValue
-    });
-  };
-
-  onChange = (value,...args) => {
-    this.setState({
-      value,
-    });
-    callFunc(this.props.onChange,value,...args);
-  };
-
-  getFormValue(){
-    return this.getProp('formValue');
-  }
-
-  getSelectedKey(){
-    return this.getProp('selectedKey');
-  }
-
-  setSelectedKey = (key) => {
-    this.setState({
-      selectedKey:key,
-    });
-    callFunc(this.props.onSelect,key);
-  };
-
-  isDisabled(){
-    return this.getProp('disabled');
-  }
-
 
 }

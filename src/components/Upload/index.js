@@ -2,7 +2,6 @@
  * Created by wangct on 2019/1/19.
  */
 import React from 'react';
-import {callFunc, classNames, getProps, isDef} from "@wangct/util";
 import DefineComponent from "../DefineComponent";
 import Btn from "../Btn";
 
