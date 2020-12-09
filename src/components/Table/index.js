@@ -309,7 +309,7 @@ export class TableSearch extends DefineComponent {
   render() {
     return <div className={classNames('w-table-search',this.isFit() && 'w-table-search-fit')}>
       <div className="w-header">
-        <Form ref={this.setForm} options={this.props.filterOptions} />
+        <Form className="w-table-form" itemWidth="50%" ref={this.setForm} options={this.props.filterOptions} />
         <BtnList options={this.getBtnOptions()} />
       </div>
       <div className="w-body">

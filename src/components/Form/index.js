@@ -4,6 +4,8 @@ import {getProps, callFunc, classNames, aryToObject, objMap, objFilter} from "@w
 import DefineComponent from "../DefineComponent";
 import {toAry} from "@wangct/util/lib/arrayUtil";
 import {toStr} from "@wangct/util/lib/stringUtil";
+import {isStr} from "@wangct/util/lib/typeUtil";
+import {getInputCom} from "../utils/utils";
 
 /**
  * 表单
@@ -12,7 +14,8 @@ export default class Form extends DefineComponent {
   state = {
     options:[],
     error:{},
-    value:this.props.defaultValue
+    value:this.props.defaultValue,
+    itemWidth:'100%',
   };
 
   getValue(){
@@ -54,9 +57,13 @@ export default class Form extends DefineComponent {
     return <div className={classNames('w-form',props.className)} style={props.style}>
       {
         this.getOptions().map(opt => {
-          const {field,readOnly = props.readOnly,component:Com = 'div'} = opt;
+          const {field,readOnly = props.readOnly,width = props.itemWidth} = opt;
+          let {component:Com} = opt;
+          if(isStr(Com)){
+            Com = getInputCom(Com) || 'div';
+          }
           const {title} = opt;
-          return <FormItem required={opt.required} title={title} key={field} error={this.state.error[field]}>
+          return <FormItem style={{width}} required={opt.required} title={title} key={field} error={this.state.error[field]}>
             <Com disabled={readOnly} title={title} value={value[field]} onChange={this.onFieldChange.bind(this,opt)} {...opt.props} />
           </FormItem>
         })
@@ -72,7 +79,7 @@ export class FormItem extends PureComponent{
 
   render(){
     const {props} = this;
-    return <div className="w-form-line">
+    return <div style={props.style} className="w-form-line">
       <div className="w-form-label">
         {
           props.required && <span style={{color:'red'}}>*</span>
@@ -86,7 +93,12 @@ export class FormItem extends PureComponent{
   }
 }
 
-
+/**
+ * 校验配置项
+ * @param options
+ * @param data
+ * @returns {*}
+ */
 export function validatorOptions(options,data){
   const validators = aryToObject(options,'field',(opt) => {
     const {required,needRequiredValidator = true,component} = opt;

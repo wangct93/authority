@@ -1,25 +1,23 @@
 
-import React, {PureComponent} from 'react';
-import {Icon, Select} from 'antd';
+import React from 'react';
+import {Icon, Select as BaseSelect,TreeSelect as AntdTreeSelect} from 'antd';
 
-import {toPromise, validateArray, equal, getProps, callFunc, toArray} from "@wangct/util";
+import {toPromise, validateArray, equal, getProps, callFunc} from "@wangct/util";
 import DefineComponent from "../DefineComponent";
 import {toAry} from "@wangct/util/lib/arrayUtil";
 import {toStr} from "@wangct/util/lib/stringUtil";
 import {isUndef} from "@wangct/util/lib/typeUtil";
 import {classNames} from "@wangct/util/lib/util";
+import {getText} from "../utils/utils";
 
 
 /**
  * 下拉框
  */
-export default class FilterSelect extends DefineComponent {
+export default class Select extends DefineComponent {
   state = {
     options: [],
     allowClear: true,
-    showSelectAll: true,
-    dropdownRender: this.dropdownRender.bind(this),
-    defaultValueIndex: 0,
   };
 
   componentDidMount() {
@@ -31,45 +29,10 @@ export default class FilterSelect extends DefineComponent {
     this.checkParams(prevProps);
   }
 
-  initValue() {
-    const {initValue} = this.props;
-    if (initValue !== false && util.isDef(initValue)) {
-      this.onChange(initValue, null);
-    }
-  }
-
   checkParams(prevProps) {
-    if (!util.equal(this.getParams(), this.getParams(prevProps)) || this.props.loadData !== prevProps.loadData) {
-      const valueChanged = !strEqual(this.props.value, prevProps.value);
-      const keep = this.props.keepOnEmptyParent && !isDef(this.getParent());
-      this.loadOptions(keep ? true : valueChanged);
+    if (!equal(this.getParams(), this.getParams(prevProps)) || this.props.loadData !== prevProps.loadData) {
+      this.loadOptions();
     }
-  }
-
-  checkAllChange = (checked, e) => {
-    const options = this.getOptions().slice(0);
-    const rows = checked ? options : [];
-    this.onChange(rows.map((row) => row.value), rows);
-  };
-
-  dropdownRender(menu) {
-    const props = getProps(this);
-    if (props.showSelectAll && this.isMultiple()) {
-      const value = toAry(this.getValue());
-      const options = this.getOptions();
-      const temp = aryToObject(value, (item) => item, () => 1);
-      const checked = options.every((opt) => temp[opt.value]) && value.length;
-      return <div onMouseDown={preventDefault}>
-        <div style={{padding: '5px 10px', border: '1px solid #ddd'}}>
-          <span style={{cursor: 'pointer'}} onClick={this.checkAllChange.bind(this, !checked)}>
-            <Checkbox checked={checked} indeterminate={!checked && value.length}/>
-            <span>全选</span>
-          </span>
-        </div>
-        {menu}
-      </div>;
-    }
-    return menu;
   }
 
   getParams(props = this.props) {
@@ -126,7 +89,7 @@ export default class FilterSelect extends DefineComponent {
   }
 
   render() {
-    return <Select
+    return <BaseSelect
       filterOption={this.getFilterOption()}
       placeholder={this.getPlaceholder()}
       {...this.props}
@@ -144,7 +107,7 @@ export default class FilterSelect extends DefineComponent {
           return <Select.Option text={item.text} data={item} key={item.value}>{getText(this, item)}</Select.Option>;
         })
       }
-    </Select>;
+    </BaseSelect>;
   }
 }
 
@@ -152,41 +115,50 @@ export default class FilterSelect extends DefineComponent {
  * 下拉树选择
  */
 export class TreeSelect extends DefineComponent {
-  state = {};
+  state = {
+    childrenField: 'children',
+    textField: 'text',
+    valueField: 'value',
+    showSearch:true,
+    allowClear:true,
+    suffixIcon:<Icon type="caret-down"/>,
+    treeDefaultExpandAll:true,
+    filterTreeNode,
+    placeholder:'请选择上级菜单',
+  };
 
-  renderTreeSelectNode = (data) => {
-    if (!data || data.length === 0) {
-      return [];
-    }
-    return data.map(item => {
-      if (item.sub_nodes && item.menu_type !== 3 && item.sub_nodes.length !== 0) {
-        return (
-          <TreeSelect.TreeNode title={item.menu_name} key={item.menu_id} value={item.menu_id} disabled={item.menu_id === -1}>
-            {this.renderTreeSelectNode(item.sub_nodes)}
-          </TreeSelect.TreeNode>
-        );
-      }
-      else if (item.sub_nodes && item.menu_type !== 3 && item.sub_nodes.length === 0) {//如果是上级结点类型，但是该节点下没有子节点。
-        return <TreeSelect.TreeNode title={item.menu_name} key={item.menu_id} value={item.menu_id} />
-      }
-      else {
+  getTreeNodes(list) {
+    const textField = this.getProp('textField');
+    const valueField = this.getProp('valueField');
+    const childrenField = this.getProp('childrenField');
+    const textFormatter = this.getProp('textFormatter');
+    const valueFormatter = this.getProp('valueFormatter');
+    return toAry(list).map((item) => {
+      if(!item){
         return null;
       }
-    }).filter((item) => !!item);
+      const text = textFormatter ? textFormatter(item[textField],item) : item[textField];
+      const value = valueFormatter ? valueFormatter(item[valueField],item) : item[valueField];
+      return <AntdTreeSelect.TreeNode title={text} key={value} value={value}>
+        {this.getTreeNodes(item[childrenField])}
+      </AntdTreeSelect.TreeNode>;
+    })
   }
 
   render() {
-    return <TreeSelect
-      {...this.props}
-      showSearch
-      allowClear
-      filterTreeNode={(str, node) => { return node.props.title.indexOf(str) > -1 }}
-      placeholder="请选择上级菜单"
-      treeDefaultExpandAll
-      suffixIcon={<Icon type="caret-down" />}
-    >{
-      this.renderTreeSelectNode(this.getOptions())
-    }
-    </TreeSelect>;
+    return <AntdTreeSelect
+      {...getProps(this)}
+    >
+      {
+        this.getTreeNodes(this.getOptions())
+      }
+    </AntdTreeSelect>;
   }
+}
+
+/**
+ * 过滤树节点
+ */
+function filterTreeNode(str,node){
+  return node.props.title.indexOf(str) > -1;
 }

@@ -6,6 +6,7 @@ import Flex, {FlexItem} from "../../components/Flex";
 import Table, {TableSearch} from "../../components/Table";
 import Tree from "../../components/Tree";
 import {openModal} from "../../utils/frameUtil";
+import {TreeSelect} from "../../components/Select";
 
 /**
  * 菜单
@@ -81,9 +82,11 @@ export default class MenuPage extends DefineComponent {
         title:'新增',
         onClick:() => {
           openModal({
-            options:[
-
-            ]
+            title:'新增',
+            options:getFormOptions(),
+            onOk:(data) => {
+              console.log(data);
+            }
           })
         },
       },
@@ -98,7 +101,7 @@ export default class MenuPage extends DefineComponent {
         return <TableSearch
           columns={state.columns}
           filterOptions={state.filterOptions}
-          // btnOptions={this.getTableBtn()}
+          btnOptions={this.getTableBtn()}
         />;
     }
 }
@@ -108,37 +111,36 @@ function getFormOptions(isCreate){
     {
       title:'上级菜单',
       field:'parent_id',
-      component:AfcTreeSelect,
+      component:TreeSelect,
       props:{
-        options:this.props.menuTreeData,
+        options:[
+          {
+            text:'wwd',
+            value:'ddf',
+          },
+          {
+            text:'wwd3',
+            value:'ddf4',
+          },
+        ],
       },
     },
     {
       title: '菜单编号',
       field: 'menu_id',
-      component: FilterInput,
-      props: {
-        disabled: isRead || this.isEdit(),
-      },
+      component: Input,
       required: true,
     },
     {
       title: '菜单名称',
       field: 'menu_name',
-      component: FilterInput,
-      props: {
-        disabled: isRead,
-      },
+      component: Input,
       required: true,
     },
     {
       title: '菜单类型',
       field: 'menu_type',
       component: 'select',
-      props: {
-        disabled: isRead,
-        loadData: DbDic.getMenuTypeList,
-      },
       required: true,
     },
   ];

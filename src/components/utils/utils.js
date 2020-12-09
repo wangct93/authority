@@ -1,3 +1,5 @@
+import Input from "../Input";
+import Select from '../Select';
 
 /**
  * 判断组件是否在DOM树里
@@ -20,4 +22,17 @@ export function getText(target,data) {
     return formatter(data.text, data);
   }
   return data.text;
+}
+
+/**
+ * 获取输入组件
+ * @param type
+ * @returns {*}
+ */
+export function getInputCom(type){
+  const map = {
+    input:Input,
+    select:Select,
+  };
+  return map[type];
 }

@@ -1,1 +1,1 @@
-import com_zhibazmj2 from '../../models/com.js'; export default [com_zhibazmj2];
+import com_1w7xvorob7a from '../../models/com.js'; export default [com_1w7xvorob7a];
