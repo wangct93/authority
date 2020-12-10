@@ -11,16 +11,6 @@ export function menuSearch(params) {
 }
 
 /**
- * 查询本节点及子节点
- * @author wangchuitong
- */
-export function menuNodeSearch(params) {
-    return requestApi('/menu/nodeSearch', {
-        body: params
-    });
-}
-
-/**
  * 菜单创建
  * @author wangchuitong
  */
@@ -54,16 +44,9 @@ export function menuDelete(menu_id) {
 }
 
 /**
- * 菜单导入
- * @author wangchuitong
+ * 菜单树
+ * @returns {Promise<*>}
  */
-export async function menuImport(file) {
-    if(!file){
-        throw '文件不存在';
-    }
-    const formData = new FormData();
-    formData.append('file',file);
-    return requestApi('/menu/import', {
-        body: formData,
-    });
+export function menuTreeSearch(){
+  return requestApi('/menu/menuTree')
 }

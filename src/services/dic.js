@@ -32,14 +32,6 @@ export function dicRequest(url,needCache = true){
 
 
 /**
- * 菜单类型
- * @author douxiaochen
- */
-export async function dicMenuType() {
-  return dicRequest('/dic/menuType');
-}
-
-/**
  * 用户启用标志
  * @author wangchuitong
  */

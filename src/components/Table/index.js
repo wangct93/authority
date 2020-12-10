@@ -5,6 +5,7 @@ import Form from "../Form";
 import BtnList from "../BtnList";
 import {getProps, isFunc, objFind, showLoading, toPromise} from "@wangct/util";
 import {message, Pagination} from "antd";
+import {alertSucInfo} from "../../utils/frameUtil";
 
 const columns = [
   {
@@ -197,9 +198,21 @@ export class TableSearch extends DefineComponent {
       pageSize:20,
       total:0,
       pageSizeOptions:['10','20','50','100','1000'],
+      showQuickJumper:true,
+      showSizeChanger:true,
       ...this.props.defaultPagination,
     },
   };
+
+  componentDidMount() {
+    this.initSearch();
+  }
+
+  initSearch(){
+    if(this.props.defaultSearch){
+      this.doSearch();
+    }
+  }
 
   getBtnOptions(){
     const {btnOptions = ['search','reset']} = this.props;
@@ -242,10 +255,15 @@ export class TableSearch extends DefineComponent {
     });
   };
 
+  doReload = () => {
+    return this.loadData();
+  };
+
   doReset = () => {
     this.setState({
       data:[],
     });
+    this.formChange({});
     this.updatePagination({
       total:0,
     });
@@ -275,7 +293,7 @@ export class TableSearch extends DefineComponent {
     });
   };
 
-  loadData(params){
+  loadData(params = this.state.oldParams){
     toPromise(this.props.loadData,params).then((data = {}) => {
       const {afterLoad} = this.props;
       const pagination = this.getPagination();
@@ -294,6 +312,9 @@ export class TableSearch extends DefineComponent {
         this.updatePagination({
           total,
         });
+        if(this.getProp('alertInfo') !== false){
+          alertSucInfo(`查询到${total}条数据`);
+        }
       }
     });
   }
@@ -309,7 +330,7 @@ export class TableSearch extends DefineComponent {
   render() {
     return <div className={classNames('w-table-search',this.isFit() && 'w-table-search-fit')}>
       <div className="w-header">
-        <Form className="w-table-form" itemWidth="50%" ref={this.setForm} options={this.props.filterOptions} />
+        <Form className="w-table-form" itemWidth="50%" ref={this.setForm} options={this.props.filterOptions} value={this.getFormValue()} onChange={this.formChange} />
         <BtnList options={this.getBtnOptions()} />
       </div>
       <div className="w-body">

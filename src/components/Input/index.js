@@ -13,7 +13,11 @@ export default class Input extends DefineComponent {
     allowClear:true,
   };
 
+  inputChange = (e) => {
+    this.onChange(e.target.value);
+  } ;
+
   render(){
-    return <BaseInput {...this.getProps()} onChange={this.onChange} />
+    return <BaseInput {...this.getProps()} onChange={this.inputChange} />
   }
 }

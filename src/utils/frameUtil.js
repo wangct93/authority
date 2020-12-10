@@ -1,13 +1,10 @@
-/**
- * 显示表单抽屉
- * @author wangchuitong
- */
 import {callFunc, classNames, random} from "@wangct/util/lib/util";
 import {isStr} from "@wangct/util/lib/typeUtil";
 import React from "react";
 import Form from "../components/Form";
-import {Modal} from "antd";
+import {Modal,message} from "antd";
 import {addFragment, removeFragment} from "../frame";
+import {toStr} from "@wangct/util/lib/stringUtil";
 
 /**
  * 打开弹窗
@@ -36,9 +33,7 @@ export function openModal(options = {}) {
       pro = callFunc(options.onOk, value);
     }
     Promise.resolve(pro).then(close).catch((msg) => {
-      if (isStr(msg)) {
-        message.error(msg);
-      }
+      alertErrInfo(msg);
     });
   }
 
@@ -52,7 +47,6 @@ export function openModal(options = {}) {
   function getElem() {
     return elem;
   }
-
   const content = Com
     ? <Com targetRef={setElem} contentRef={setElem} ref={setElem} {...options.contentProps} />
     : <Form
@@ -77,4 +71,20 @@ export function openModal(options = {}) {
   return {
     close,
   };
+}
+
+/**
+ * 提示正确信息
+ * @param msg
+ */
+export function alertSucInfo(msg){
+  message.success(toStr(msg));
+}
+
+/**
+ * 提示错误信息
+ * @param msg
+ */
+export function alertErrInfo(msg){
+  message.error(toStr(msg));
 }

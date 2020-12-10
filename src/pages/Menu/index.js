@@ -1,12 +1,12 @@
 import React  from 'react';
-import css from './index.less';
 import DefineComponent  from "../../components/DefineComponent";
 import Input from "../../components/Input";
-import Flex, {FlexItem} from "../../components/Flex";
-import Table, {TableSearch} from "../../components/Table";
-import Tree from "../../components/Tree";
-import {openModal} from "../../utils/frameUtil";
+import {TableSearch} from "../../components/Table";
+import {alertSucInfo, openModal} from "../../utils/frameUtil";
 import {TreeSelect} from "../../components/Select";
+import {menuCreate, menuDelete, menuSearch, menuTreeSearch, menuUpdate} from "../../services/menu";
+import {colTimeWidth} from "../../utils/columns";
+import css from './index.less';
 
 /**
  * 菜单
@@ -36,59 +36,75 @@ export default class MenuPage extends DefineComponent {
         },
         {
           title: '上级菜单编号',
-          field: 'parent_id',
+          field: 'parent',
         },
         {
           title: '菜单名称',
           field: 'menu_name',
         },
         {
-          title: '菜单URL',
-          field: 'menu_url',
-        },
-        {
-          title: '菜单类型',
-          field: 'menu_type',
-        },
-        {
-          title: '排序号',
-          field: 'order_num',
-        },
-        {
-          title: '菜单按钮',
-          field: 'menu_icon',
+          title: '更新时间',
+          field: 'update_time',
+          width:colTimeWidth,
         },
         {
           title: '创建时间',
           field: 'create_time',
+          width:colTimeWidth,
         },
         {
           title: '操作',
           field: 'op',
           width:100,
-          render:() => {
+          render:(v,row) => {
             return <div className="op-box">
-              <a>编辑</a>
-              <a>删除</a>
+              <a onClick={this.doUpdate.bind(this,row)}>编辑</a>
+              <a onClick={this.doDelete.bind(this,row)}>删除</a>
             </div>;
           }
         },
       ],
     };
 
+  doDelete = (row) => {
+    menuDelete(row.menu_id).then(() => {
+      alertSucInfo('删除成功');
+      this.tableReload();
+    });
+  };
+
+  doUpdate = (row) => {
+    openModal({
+      title:'编辑',
+      options:getFormOptions(false),
+      onOk:(data) => {
+        return menuUpdate(data).then(() => {
+          alertSucInfo('编辑成功');
+          this.tableReload();
+        });
+      },
+      value:row,
+    });
+  };
+
+  doCreate = () => {
+    openModal({
+      title:'新增',
+      options:getFormOptions(),
+      onOk:(data) => {
+        return menuCreate(data).then(() => {
+          alertSucInfo('新增成功');
+          this.tableReload();
+        });
+      }
+    });
+  };
+
   getTableBtn(){
     return [
       {
         title:'新增',
-        onClick:() => {
-          openModal({
-            title:'新增',
-            options:getFormOptions(),
-            onOk:(data) => {
-              console.log(data);
-            }
-          })
-        },
+        onClick:this.doCreate,
       },
       'search',
       'reset',
@@ -102,45 +118,41 @@ export default class MenuPage extends DefineComponent {
           columns={state.columns}
           filterOptions={state.filterOptions}
           btnOptions={this.getTableBtn()}
+          loadData={menuSearch}
+          ref={this.setTable}
+          defaultSearch
         />;
     }
 }
 
-function getFormOptions(isCreate){
+/**
+ * 获取表单配置项
+ * @param isCreate
+ * @returns {*[]}
+ */
+function getFormOptions(isCreate = true){
   return [
     {
       title:'上级菜单',
-      field:'parent_id',
+      field:'parent',
       component:TreeSelect,
       props:{
-        options:[
-          {
-            text:'wwd',
-            value:'ddf',
-          },
-          {
-            text:'wwd3',
-            value:'ddf4',
-          },
-        ],
-      },
+        loadData:menuTreeSearch,
+      }
     },
     {
       title: '菜单编号',
       field: 'menu_id',
       component: Input,
       required: true,
+      props:{
+        disabled:!isCreate,
+      },
     },
     {
       title: '菜单名称',
       field: 'menu_name',
       component: Input,
-      required: true,
-    },
-    {
-      title: '菜单类型',
-      field: 'menu_type',
-      component: 'select',
       required: true,
     },
   ];

@@ -108,6 +108,7 @@ export default class DefineComponent extends PureComponent {
     this.setState({
       formValue
     });
+    callFunc(this.props.formChange);
   };
 
   onChange = (value,...args) => {
@@ -144,6 +145,28 @@ export default class DefineComponent extends PureComponent {
     const defaultValue = this.getProp('defaultValue');
     if(this.getProp('value') == null && defaultValue != null){
       this.onChange(defaultValue);
+    }
+  }
+
+  setTable = (table) => {
+    this.table = table;
+  }
+
+  getTable(){
+    return this.table;
+  }
+
+  tableSearch(){
+    const table = this.getTable();
+    if(table && table.doSearch){
+      table.doSearch();
+    }
+  }
+
+  tableReload(){
+    const table = this.getTable();
+    if(table && table.doReload){
+      table.doReload();
     }
   }
 

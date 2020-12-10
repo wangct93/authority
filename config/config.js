@@ -17,6 +17,10 @@ module.exports = {
         {
           path:'/menu',
           component:'Menu',
+        },
+        {
+          path:'/role',
+          component:'Role',
         }
       ]
     }
@@ -25,9 +29,12 @@ module.exports = {
   disableCssModules:[
     resolve('src/styles')
   ],
-  proxy:{
-    '/api/':getProxyAddress()
-  }
+  devServer:{
+    proxy:{
+      '/api/':getProxyAddress()
+    },
+  },
+  isDev:true,
 };
 
 

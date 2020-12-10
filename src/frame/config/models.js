@@ -1,1 +1,1 @@
-import com_1w7xvorob7a from '../../models/com.js'; export default [com_1w7xvorob7a];
+import com_9jul10wvsu from '../../models/com.js'; export default [com_9jul10wvsu];

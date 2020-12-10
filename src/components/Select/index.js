@@ -127,6 +127,18 @@ export class TreeSelect extends DefineComponent {
     placeholder:'请选择上级菜单',
   };
 
+  componentDidMount() {
+    this.initOptions();
+  }
+
+  initOptions(){
+    toPromise(this.props.loadData).then((options) => {
+      this.setState({
+        options:toAry(options),
+      });
+    });
+  }
+
   getTreeNodes(list) {
     const textField = this.getProp('textField');
     const valueField = this.getProp('valueField');

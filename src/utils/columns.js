@@ -10,3 +10,9 @@ export const colUserNameWidth = 100;
  * @author wangchuitong
  */
 export const colUserIdWidth = 100;
+
+/**
+ * 时间列宽
+ * @type {number}
+ */
+export const colTimeWidth = 160;
