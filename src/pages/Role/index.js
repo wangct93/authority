@@ -10,7 +10,7 @@ import css from './index.less';
 import {roleCreate, roleDelete, roleSearch, roleUpdate} from "../../services/role";
 
 /**
- * 菜单
+ * 角色
  */
 export default class RolePage extends DefineComponent {
 
@@ -141,6 +141,7 @@ function getFormOptions(isCreate = true){
       component: TreeSelect,
       props:{
         loadData:menuTreeSearch,
+        treeCheckable:true,
       },
       required: true,
     }

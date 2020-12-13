@@ -8,14 +8,14 @@
   height:@headerHeight;
   align-items: center;
   border-bottom: 1px solid #ddd;
-  padding: 0 20px;
+  padding: 0 20px 0 120px;
+  background-color: rgb(38,47,62);
+  color:#fff;
 }
 
 .menu_item{
   height: @headerHeight;
   .flex_center();
-  border-right: 1px solid #ddd;
-  border-left: 1px solid #ddd;
   margin-left: -1px;
   padding: 0 20px;
   &:first-child{
@@ -23,11 +23,10 @@
   }
   cursor: pointer;
   &:hover{
-    background-color: #eee;
+    background-color: rgb(52,66,88);
   }
 
   &.active{
     background-color: @activeColor;
-    color:#fff;
   }
 }
