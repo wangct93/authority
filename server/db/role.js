@@ -6,6 +6,7 @@ const {objClone} = require("@wangct/util/lib/objectUtil");
 const {getPageLimit} = require("../utils/utils");
 const mysqlConfig = require('../config/mysql');
 const moment = require('moment');
+const {isAry} = require("@wangct/util/lib/typeUtil");
 const toAry = require("@wangct/util/lib/arrayUtil").toAry;
 const toStr = require("@wangct/util/lib/stringUtil").toStr;
 const mysql = new Mysql(mysqlConfig);
@@ -36,11 +37,13 @@ async function queryRoleList(params = {}){
         field: 'update_time',
         isTime: true,
       }],
+    orderField:'update_time',
+    orderDesc:true,
     where:objClone(params,['role_id','role_name']),
   }).then((data) => {
     return data.map((item) => ({
       ...item,
-      menu_list:toStr(item).split(','),
+      menu_list:toStr(item.menu_list).split(','),
     }))
   });
 }
@@ -103,8 +106,12 @@ async function updateRole(params){
  * @returns {{}}
  */
 function formatRoleData(data){
+  const roleData = objClone(data,['role_name','create_time','update_time']);
+  if(data.role_id){
+    roleData.role_id = data.role_id;
+  }
   return {
-    ...objClone(data,['role_id','role_name','create_time','update_time']),
+    ...roleData,
     menu_list:toAry(data.menu_list).join(','),
   };
 }

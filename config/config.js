@@ -21,6 +21,14 @@ module.exports = {
         {
           path:'/role',
           component:'Role',
+        },
+        {
+          path:'/user',
+          component:'User',
+        },
+        {
+          path:'/dept',
+          component:'Dept',
         }
       ]
     }

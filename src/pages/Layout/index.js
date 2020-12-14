@@ -56,6 +56,10 @@ class MenuList extends DefineComponent {
         title:'用户管理',
         path:'/user',
       },
+      {
+        title:'部门管理',
+        path:'/dept',
+      },
     ]
   };
 

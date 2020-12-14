@@ -4,4 +4,8 @@ component:(props) => <Async {...props} getComponent={() => import('../../pages/L
 children:[{path:'/menu',
 component:(props) => <Async {...props} getComponent={() => import('../../pages/Menu')} />},
 {path:'/role',
-component:(props) => <Async {...props} getComponent={() => import('../../pages/Role')} />}]}]
+component:(props) => <Async {...props} getComponent={() => import('../../pages/Role')} />},
+{path:'/user',
+component:(props) => <Async {...props} getComponent={() => import('../../pages/User')} />},
+{path:'/dept',
+component:(props) => <Async {...props} getComponent={() => import('../../pages/Dept')} />}]}]

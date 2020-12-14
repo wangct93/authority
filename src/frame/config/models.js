@@ -1,1 +1,1 @@
-import com_277k00vlu55 from '../../models/com.js'; export default [com_277k00vlu55];
+import com_9mdkno5pep from '../../models/com.js'; export default [com_9mdkno5pep];

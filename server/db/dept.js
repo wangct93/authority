@@ -6,23 +6,26 @@ const {objClone} = require("@wangct/util/lib/objectUtil");
 const {getPageLimit} = require("../utils/utils");
 const mysqlConfig = require('../config/mysql');
 const moment = require('moment');
+const {isAry} = require("@wangct/util/lib/typeUtil");
+const toAry = require("@wangct/util/lib/arrayUtil").toAry;
+const toStr = require("@wangct/util/lib/stringUtil").toStr;
 const mysql = new Mysql(mysqlConfig);
 
 module.exports = {
-  queryMenuList,
-  createMenu,
-  deleteMenu,
-  updateMenu,
+  queryDeptList,
+  createDept,
+  deleteDept,
+  updateDept,
 };
 
 /**
- * 获取菜单列表
+ * 获取用户列表
  * @param params
  * @returns {Promise<any>}
  */
-async function queryMenuList(params = {}){
+async function queryDeptList(params = {}){
   return mysql.search({
-    table: 'menu',
+    table: 'dept',
     limit: getPageLimit(params.page_num, params.page_size),
     fields: [
       '*',
@@ -36,21 +39,20 @@ async function queryMenuList(params = {}){
       }],
     orderField:'update_time',
     orderDesc:true,
-    where:objClone(params,['menu_id','menu_name']),
-
+    where:objClone(params,['dept_id','dept_name']),
   });
 }
 
 /**
- * 获取菜单列表
+ * 获取用户列表
  * @param params
  * @returns {Promise<any>}
  */
-async function createMenu(params){
+async function createDept(params){
   return mysql.insert({
-    table:'menu',
+    table:'dept',
     data:{
-      ...formatMenuData(params),
+      ...formatDeptData(params),
       create_time:moment().format('YYYY-MM-DD HH:mm:ss'),
       update_time:moment().format('YYYY-MM-DD HH:mm:ss'),
     },
@@ -58,46 +60,46 @@ async function createMenu(params){
 }
 
 /**
- * 删除菜单
+ * 删除用户
  * @returns {Promise<any>}
  */
-async function deleteMenu(menu_id){
+async function deleteDept(dept_id){
   return mysql.delete({
-    table:'menu',
+    table:'dept',
     where:[
       {
-        value:menu_id,
-        key:'menu_id',
+        value:dept_id,
+        key:'dept_id',
       }
     ],
   });
 }
 
 /**
- * 修改菜单
+ * 修改用户
  * @returns {Promise<any>}
  */
-async function updateMenu(params){
+async function updateDept(params){
   return mysql.update({
-    table:'menu',
+    table:'dept',
     where:[
       {
-        value:params.menu_id,
-        key:'menu_id',
+        value:params.dept_id,
+        key:'dept_id',
       }
     ],
     data:{
-      ...formatMenuData(params),
+      ...formatDeptData(params),
       update_time:moment().format('YYYY-MM-DD HH:mm:ss'),
     },
   });
 }
 
 /**
- * 格式化菜单数据
+ * 格式化用户数据
  * @param data
  * @returns {{}}
  */
-function formatMenuData(data){
-  return objClone(data,['menu_id','menu_name','parent','create_time','update_time']);
+function formatDeptData(data){
+  return objClone(data,['dept_id','dept_name','parent','create_time','update_time']);
 }

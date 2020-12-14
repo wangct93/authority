@@ -27,7 +27,9 @@ export function openModal(options = {}) {
     }
     let pro;
     if (contentElem.validator) {
-      pro = contentElem.validator().then(options.onOk);
+      pro = contentElem.validator().then(options.onOk).catch((err) => {
+        throw Object.values(err)[0];
+      });
     } else {
       const value = contentElem.getValue && contentElem.getValue();
       pro = callFunc(options.onOk, value);

@@ -104,7 +104,7 @@ export default class Select extends DefineComponent {
           if(value == null){
             return null;
           }
-          return <Select.Option text={item.text} data={item} key={item.value}>{getText(this, item)}</Select.Option>;
+          return <BaseSelect.Option text={item.text} data={item} key={item.value}>{getText(this, item)}</BaseSelect.Option>;
         })
       }
     </BaseSelect>;

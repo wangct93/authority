@@ -1,6 +1,7 @@
 
 import {toAry,getCache,setCache,callFunc} from "@wangct/util";
 import {requestApi} from "../frame";
+import {dicFormatter, getDicFormatter} from "../utils/util";
 
 /**
  * 缓存方法结果
@@ -43,5 +44,5 @@ export function dicUserEnableMark() {
  * 角色列表
  */
 export function dicRoleList(){
-  return dicRequest('/dic/roleList');
+  return dicRequest('/dic/roleList').then(getDicFormatter('role_id','role_name'));
 }

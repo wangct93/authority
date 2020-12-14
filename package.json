@@ -1,5 +1,5 @@
 {
-  "name": "template",
+  "name": "authority",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,8 @@
     "start": "dev",
     "server": "node server",
     "build": "dev build",
-    "publish": "npm pu --registry https://registry.npmjs.org/"
+    "publish": "npm pu --registry https://registry.npmjs.org/",
+    "login": "npm login --registry https://registry.npmjs.org/"
   },
   "dependencies": {
     "@wangct/node-util": "^1.0.1",
