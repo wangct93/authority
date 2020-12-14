@@ -3,14 +3,40 @@ import css from './index.less';
 import Flex, {FlexItem} from "../../components/Flex";
 import DefineComponent from "../../components/DefineComponent";
 import DateView from "../../components/DateView";
-import {getPathname, pathMatch, pathTo, reduxConnect} from "../../frame";
+import {getPathname, pathMatch, pathTo, reduxConnect, updateModel} from "../../frame";
 import {classNames} from "@wangct/util/lib/util";
+import {queryUserInfo} from "../../services/user";
 
 /**
  * 布局
  */
 export default class Layout extends DefineComponent {
+
+  state = {
+    checked:false,
+  };
+
+  componentDidMount() {
+    this.checkUserInfo();
+  }
+
+  checkUserInfo(){
+    queryUserInfo().then((userInfo) => {
+      updateModel('layout',{
+        userInfo,
+      });
+      this.setState({
+        checked:true,
+      });
+    }).catch(() => {
+      pathTo('/login');
+    });
+  }
+
   render() {
+    if(!this.state.checked){
+      return null;
+    }
     return <Flex column className={css.container}>
       <Header />
       <FlexItem>

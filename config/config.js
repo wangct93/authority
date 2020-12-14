@@ -11,6 +11,10 @@ module.exports = {
   },
   routes:[
     {
+      path:'/login',
+      component:'Login',
+    },
+    {
       path:'/',
       component:'Layout',
       children:[
@@ -31,7 +35,7 @@ module.exports = {
           component:'Dept',
         }
       ]
-    }
+    },
   ],
   dynamicImport:true,
   disableCssModules:[

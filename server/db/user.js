@@ -39,7 +39,7 @@ async function queryUserList(params = {}){
         field: 'update_time',
         isTime: true,
       }],
-    where:objClone(params,['user_id','user_name']),
+    where:objClone(params,['user_id','user_name','user_password']),
   }).then((data) => {
     return data.map((item) => ({
       ...item,

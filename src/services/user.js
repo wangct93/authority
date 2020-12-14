@@ -31,18 +31,6 @@ export function userUpdate(params){
 }
 
 /**
- * 获取用户详情
- * @author wangchuitong
- */
-export function userGetInfo(user_id){
-  return requestApi('/user/getInfo',{
-    body:{
-      user_id,
-    }
-  });
-}
-
-/**
  * 删除
  * @author wangchuitong
  */
@@ -55,29 +43,21 @@ export function userDelete(user_id){
 }
 
 /**
- * 导出
+ * 用户登录
  * @author wangchuitong
  */
-export function userExport(){
-  return requestApi('/user/exportUser');
-}
-
-/**
- * 导入
- * @author wangchuitong
- */
-export function userImport(params){
-  return requestApi('/user/import',{
+export function userLogin(params){
+  return requestApi('/user/login',{
     body:params,
   });
 }
 
 /**
- * 全量导入
+ * 获取当前用户信息
  * @author wangchuitong
  */
-export function userImportAll(params){
-  return requestApi('/user/importAllUser',{
-    body:params,
+export function queryUserInfo(){
+  return requestApi('/user/queryUserInfo',{
+    alertError:false,
   });
 }

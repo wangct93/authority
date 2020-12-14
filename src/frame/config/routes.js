@@ -1,5 +1,7 @@
 import React from 'react';import Async from '../components/Async';
-export default [{path:'/',
+export default [{path:'/login',
+component:(props) => <Async {...props} getComponent={() => import('../../pages/Login')} />},
+{path:'/',
 component:(props) => <Async {...props} getComponent={() => import('../../pages/Layout')} />,
 children:[{path:'/menu',
 component:(props) => <Async {...props} getComponent={() => import('../../pages/Menu')} />},

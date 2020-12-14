@@ -1,5 +1,6 @@
 import {isStr} from "@wangct/util/lib/typeUtil";
 import {getGlobalConfig} from "./utils";
+import {message} from 'antd';
 
 const {fetch} = window;
 
