@@ -1,7 +1,7 @@
 /**
  * Created by wangct on 2018/12/30.
  */
-const Mysql = require('../modules/mysql');
+const Mysql = require('../@wangct/mysql');
 const {objClone} = require("@wangct/util/lib/objectUtil");
 const {getPageLimit} = require("../utils/utils");
 const mysqlConfig = require('../config/mysql');

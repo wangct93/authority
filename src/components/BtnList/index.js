@@ -16,6 +16,6 @@ export default class BtnList extends DefineComponent {
           return <Btn {...opt} key={index}>{opt.title}</Btn>;
         })
       }
-    </div>
+    </div>;
   }
 }

@@ -221,11 +221,13 @@ export class TableSearch extends DefineComponent {
         title:'查询',
         onClick:this.doSearch,
         type:'primary',
+        auth:this.getPagination('searchAuth'),
       },
       reset:{
         title:'重置',
         onClick:this.doReset,
         type:'primary',
+        auth:this.getPagination('resetAuth'),
       },
     };
     return toAry(btnOptions).map((opt) => {

@@ -1,1 +1,1 @@
-import com_2m1buuts6v from '../../models/com.js';import layout_7hg7j23rbm from '../../models/layout.js'; export default [com_2m1buuts6v,layout_7hg7j23rbm];
+import com_g4npy5w51 from '../../models/com.js';import layout_2gidy1sl6o6 from '../../models/layout.js'; export default [com_g4npy5w51,layout_2gidy1sl6o6];
