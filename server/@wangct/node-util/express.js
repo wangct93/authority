@@ -24,6 +24,7 @@ class Server extends BaseData{
       html:'dist/index.html',
       port:8080,
       autoStart:true,
+      routerDirname:'server/router',
       ...options,
     });
     this.init();
@@ -70,7 +71,8 @@ class Server extends BaseData{
   }
 
   getRouterByDirname(){
-    const {routerDirname} = this.getProps();
+    let {routerDirname} = this.getProps();
+    routerDirname = resolve(routerDirname);
     if(isDir(routerDirname)){
       return require('fs').readdirSync(routerDirname).map(fileName => {
         const filePath = resolve(routerDirname,fileName);
@@ -88,6 +90,7 @@ class Server extends BaseData{
     const app = this.getApp();
     routers.forEach(router => {
       app.use(formatRouterPath(router.path),router.router);
+      app.use(formatRouterPath('/api',router.path),router.router);
     });
   }
 

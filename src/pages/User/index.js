@@ -9,6 +9,8 @@ import {userCreate, userDelete, userSearch, userUpdate} from "../../services/use
 import {TreeSelect} from "../../components/Select";
 import {deptTreeSearch} from "../../services/dept";
 import {toAry} from "@wangct/util";
+import Auth from "../../components/Auth";
+import {auths} from "../../json/auths";
 
 /**
  * 用户
@@ -62,8 +64,12 @@ export default class UserPage extends DefineComponent {
         width:100,
         render:(v,row) => {
           return <div className="op-box">
-            <a onClick={this.doUpdate.bind(this,row)}>编辑</a>
-            <a onClick={this.doDelete.bind(this,row)}>删除</a>
+            <Auth auth={auths.userUpdate}>
+              <a onClick={this.doUpdate.bind(this,row)}>编辑</a>
+            </Auth>
+            <Auth auth={auths.userDelete}>
+              <a onClick={this.doDelete.bind(this,row)}>删除</a>
+            </Auth>
           </div>;
         }
       },
@@ -109,6 +115,7 @@ export default class UserPage extends DefineComponent {
       {
         title:'新增',
         onClick:this.doCreate,
+        auth:auths.userCreate,
       },
       'search',
       'reset',
@@ -125,6 +132,7 @@ export default class UserPage extends DefineComponent {
       loadData={userSearch}
       ref={this.setTable}
       defaultSearch
+      searchAuth={auths.userSearch}
     />;
   }
 }

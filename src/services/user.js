@@ -53,6 +53,14 @@ export function userLogin(params){
 }
 
 /**
+ * 用户登出
+ * @author wangchuitong
+ */
+export function userLogout(){
+  return requestApi('/user/logout');
+}
+
+/**
  * 获取当前用户信息
  * @author wangchuitong
  */

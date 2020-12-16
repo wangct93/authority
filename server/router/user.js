@@ -1,4 +1,5 @@
 const express = require('express');
+const queryMenuListByUserId = require("../db/menu").queryMenuListByUserId;
 const {toStr} = require("@wangct/util/lib/stringUtil");
 const {deleteUser} = require("../db/user");
 const {updateUser} = require("../db/user");
@@ -16,6 +17,7 @@ router.post('/update',update);
 router.post('/delete',deleteFunc);
 router.post('/login',login);
 router.post('/queryUserInfo',queryUserInfoByCookie);
+router.post('/logout',logout);
 
 /**
  * 查询
@@ -119,9 +121,13 @@ async function queryUserInfoByCookie(req,res){
       const params = JSON.parse(decode(toStr(token)));
       const userInfo = await queryUserInfo(params);
       if(userInfo){
+        const menuList = await queryMenuListByUserId(userInfo.user_id);
         res.send({
           code:0,
-          data:userInfo,
+          data:{
+            ...userInfo,
+            menu_list:menuList,
+          },
         });
       }else{
         res.send({
@@ -138,4 +144,14 @@ async function queryUserInfoByCookie(req,res){
       code:500,
     });
   }
+}
+
+/**
+ * 登出
+ */
+function logout(req,res){
+  res.cookie('token','');
+  res.send({
+    code:0,
+  });
 }

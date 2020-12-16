@@ -6,6 +6,9 @@ const {objClone} = require("@wangct/util/lib/objectUtil");
 const {getPageLimit} = require("../utils/utils");
 const mysqlConfig = require('../config/mysql');
 const moment = require('moment');
+const aryRemoveRepeat = require("@wangct/util/lib/arrayUtil").aryRemoveRepeat;
+const queryRoleList = require("./role").queryRoleList;
+const queryUserList = require("./user").queryUserList;
 const mysql = new Mysql(mysqlConfig);
 
 module.exports = {
@@ -13,6 +16,7 @@ module.exports = {
   createMenu,
   deleteMenu,
   updateMenu,
+  queryMenuListByUserId,
 };
 
 /**
@@ -100,4 +104,22 @@ async function updateMenu(params){
  */
 function formatMenuData(data){
   return objClone(data,['menu_id','menu_name','parent','create_time','update_time']);
+}
+
+/**
+ * 根据用户编号获取菜单列表
+ * @returns {Promise<any>}
+ */
+async function queryMenuListByUserId(userId){
+  const userList = await queryUserList({user_id:userId});
+  const userInfo = userList[0];
+  if(!userInfo){
+    return [];
+  }
+  const roleList = await queryRoleList({
+    role_id:userInfo.role_list[0],
+  });
+  return aryRemoveRepeat(roleList.reduce((pv,item) => {
+    return pv.concat(item.menu_list);
+  },[]));
 }

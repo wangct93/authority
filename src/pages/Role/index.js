@@ -9,6 +9,8 @@ import {colTimeWidth} from "../../utils/columns";
 import css from './index.less';
 import {roleCreate, roleDelete, roleSearch, roleUpdate} from "../../services/role";
 import {toAry} from '@wangct/util';
+import {auths} from "../../json/auths";
+import Auth from "../../components/Auth";
 
 /**
  * 角色
@@ -58,8 +60,12 @@ export default class RolePage extends DefineComponent {
         width:100,
         render:(v,row) => {
           return <div className="op-box">
-            <a onClick={this.doUpdate.bind(this,row)}>编辑</a>
-            <a onClick={this.doDelete.bind(this,row)}>删除</a>
+            <Auth auth={auths.roleUpdate}>
+              <a onClick={this.doUpdate.bind(this,row)}>编辑</a>
+            </Auth>
+            <Auth auth={auths.roleDelete}>
+              <a onClick={this.doDelete.bind(this,row)}>删除</a>
+            </Auth>
           </div>;
         }
       },
@@ -105,6 +111,7 @@ export default class RolePage extends DefineComponent {
       {
         title:'新增',
         onClick:this.doCreate,
+        auth:auths.roleCreate,
       },
       'search',
       'reset',
@@ -121,6 +128,7 @@ export default class RolePage extends DefineComponent {
       loadData={roleSearch}
       ref={this.setTable}
       defaultSearch
+      searchAuth={auths.roleSearch}
     />;
   }
 }
