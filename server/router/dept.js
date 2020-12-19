@@ -1,18 +1,16 @@
-const express = require('express');
 const {deleteDept} = require("../db/dept");
 const {updateDept} = require("../db/dept");
 const {createDept} = require("../db/dept");
 const {queryDeptList} = require("../db/dept");
 const {toAry} = require("@wangct/util/lib/arrayUtil");
-const router = express.Router();
 
-module.exports = router;
-
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/deptTree',deptTree);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  deptTree,
+};
 
 /**
  * 查询

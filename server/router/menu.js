@@ -8,11 +8,13 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/menuTree',menuTree);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  menuTree,
+};
 
 /**
  * 查询

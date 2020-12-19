@@ -8,7 +8,9 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/roleList',roleList);
+module.exports = {
+  roleList,
+};
 
 /**
  * 角色列表

@@ -7,6 +7,8 @@ const serverUtil = require('./util');
 const {proParse} = require('@wangct/util');
 const {resolve} = pathUtil;
 const multer = require('multer');
+const toPromise = require("@wangct/util/lib/promiseUtil").toPromise;
+const isFunc = require("@wangct/util/lib/typeUtil").isFunc;
 const log = require("./log").log;
 const {pathFilename} = require("./path");
 const {isDir} = require("./file");
@@ -89,8 +91,20 @@ class Server extends BaseData{
     const {routers = this.getRouterByDirname()} = this.getProps();
     const app = this.getApp();
     routers.forEach(router => {
-      app.use(formatRouterPath(router.path),router.router);
-      app.use(formatRouterPath('/api',router.path),router.router);
+      let {router:routerFunc} = router;
+      if(!isFunc(routerFunc)){
+        routerFunc = express.Router();
+        Object.keys(router.router).forEach((key) => {
+          console.log(router.router,formatRouterPath(key));
+          routerFunc.post(formatRouterPath(key),(req,res,next) => {
+            toPromise(router.router[key],req,res,next).catch((err) => {
+              sendErrRes(res,err);
+            });
+          });
+        });
+      }
+      app.use(formatRouterPath(router.path),routerFunc);
+      app.use(formatRouterPath('/api',router.path),routerFunc);
     });
   }
 

@@ -11,13 +11,15 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/login',login);
-router.post('/queryUserInfo',queryUserInfoByCookie);
-router.post('/logout',logout);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  login,
+  queryUserInfo:queryUserInfoByCookie,
+  logout,
+};
 
 /**
  * 查询
