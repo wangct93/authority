@@ -1,18 +1,17 @@
-const express = require('express');
+const {sendRes} = require("../@wangct/node-util/express");
 const {deleteDept} = require("../db/dept");
 const {updateDept} = require("../db/dept");
 const {createDept} = require("../db/dept");
 const {queryDeptList} = require("../db/dept");
 const {toAry} = require("@wangct/util/lib/arrayUtil");
-const router = express.Router();
 
-module.exports = router;
-
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/deptTree',deptTree);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  deptTree,
+};
 
 /**
  * 查询
@@ -26,13 +25,10 @@ async function search(req,res){
   }).then((data) => data.length);
   const listPro = await queryDeptList(req.body);
   const [total,list] = await Promise.all([totalPro,listPro]);
-  res.send({
-    code:0,
-    data:{
-      total,
-      list,
-    },
-  });
+  return {
+    total,
+    list,
+  };
 }
 
 /**
@@ -41,11 +37,7 @@ async function search(req,res){
  * @param res
  */
 async function create(req,res){
-  const data = await createDept(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return createDept(req.body);
 }
 
 /**
@@ -54,11 +46,7 @@ async function create(req,res){
  * @param res
  */
 async function update(req,res){
-  const data = await updateDept(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return await updateDept(req.body);
 }
 
 /**
@@ -67,11 +55,7 @@ async function update(req,res){
  * @param res
  */
 async function deleteFunc(req,res){
-  const data = await deleteDept(req.body.dept_id);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return deleteDept(req.body.dept_id);
 }
 
 /**
@@ -90,6 +74,9 @@ async function deptTree(req,res){
   });
 
   function getTreeNodeList(parent){
+    if(!temp[parent]){
+      return null;
+    }
     return toAry(temp[parent]).map((item) => {
       return {
         ...item,
@@ -99,10 +86,5 @@ async function deptTree(req,res){
       };
     });
   };
-
-  res.send({
-    code:0,
-    data:getTreeNodeList('root'),
-  });
-
+  return getTreeNodeList('root');
 }

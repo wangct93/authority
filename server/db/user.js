@@ -44,7 +44,7 @@ async function queryUserList(params = {}){
     return data.map((item) => ({
       ...item,
       role_list:toStr(item.role_list).split(','),
-    }))
+    }));
   });
 }
 

@@ -6,7 +6,8 @@ import {requestApi} from "../frame";
  */
 export function roleSearch(params) {
     return requestApi(`/role/search`, {
-        body: params
+        body: params,
+      loading:true,
     })
 }
 
@@ -17,6 +18,7 @@ export function roleSearch(params) {
 export function roleCreate(params) {
     return requestApi(`/role/create`, {
         body: params,
+      loading:true,
     });
 }
 
@@ -26,7 +28,8 @@ export function roleCreate(params) {
  */
 export function roleUpdate(params) {
     return requestApi(`/role/update`, {
-        body: params
+        body: params,
+      loading:true,
     })
 }
 
@@ -38,7 +41,8 @@ export function roleDelete(role_id) {
     return requestApi(`/role/delete`, {
         body: {
           role_id,
-        }
+        },
+      loading:true,
     })
 }
 
@@ -50,6 +54,6 @@ export function getRolesByUserId(user_id) {
     return requestApi(`/role/findRolesByUserId`, {
       body:{
         user_id,
-      }
+      },
     });
 }

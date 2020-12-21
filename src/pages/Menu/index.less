@@ -1,1 +1,29 @@
 @import "../../styles/common";
+
+.container{
+  height: 100%;
+}
+
+.left_box{
+  width:200px;
+  border-right: @border;
+}
+
+.header{
+  border-bottom: @border;
+  padding-left: 10px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 40px;
+  :global{
+    .anticon{
+      margin-right: 10px;
+    }
+  }
+}
+
+.tree_box{
+  overflow: auto;
+  padding-left: 10px;
+}

@@ -5,12 +5,12 @@
 
   &.w-flex-column{
     .flex_parent_column();
-    .w-flex-item{
+    & > .w-flex-item{
       .flex_child_column();
     }
   }
 
-  .w-flex-item{
+  & > .w-flex-item{
     .flex_child();
   }
 }

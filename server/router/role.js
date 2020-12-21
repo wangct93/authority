@@ -8,10 +8,12 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+};
 
 /**
  * 查询
@@ -25,13 +27,10 @@ async function search(req,res){
   }).then((data) => data.length);
   const listPro = await queryRoleList(req.body);
   const [total,list] = await Promise.all([totalPro,listPro]);
-  res.send({
-    code:0,
-    data:{
-      total,
-      list,
-    },
-  });
+  return {
+    total,
+    list,
+  };
 }
 
 /**
@@ -40,11 +39,7 @@ async function search(req,res){
  * @param res
  */
 async function create(req,res){
-  const data = await createRole(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return createRole(req.body);
 }
 
 /**
@@ -53,11 +48,7 @@ async function create(req,res){
  * @param res
  */
 async function update(req,res){
-  const data = await updateRole(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return updateRole(req.body);
 }
 
 /**
@@ -66,9 +57,5 @@ async function update(req,res){
  * @param res
  */
 async function deleteFunc(req,res){
-  const data = await deleteRole(req.body.role_id);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return deleteRole(req.body.role_id);
 }

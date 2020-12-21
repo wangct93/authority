@@ -1,4 +1,5 @@
 const express = require('express');
+const {sendRes} = require("../@wangct/node-util/express");
 const {toAry} = require("@wangct/util/lib/arrayUtil");
 const {deleteMenu} = require("../db/menu");
 const {updateMenu} = require("../db/menu");
@@ -8,11 +9,14 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/menuTree',menuTree);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  menuTree,
+  nodeSearch,
+};
 
 /**
  * 查询
@@ -26,13 +30,50 @@ async function search(req,res){
   }).then((data) => data.length);
   const listPro = await queryMenuList(req.body);
   const [total,list] = await Promise.all([totalPro,listPro]);
-  res.send({
-    code:0,
-    data:{
-      total,
-      list,
-    },
+  return {
+    total,
+    list,
+  };
+}
+
+/**
+ * 节点查询
+ * @param req
+ * @returns {Promise<void>}
+ */
+async function nodeSearch(req){
+  const menus = await queryMenuList({
+    ...req.body,
+    page_size:0,
   });
+  const target = menus.find((menu) => menu.menu_id === req.body.parent);
+  if(!target){
+    return {
+      total:0,
+      list:[],
+    };
+  }
+  const temp = {};
+  menus.forEach((menu) => {
+    const parent = menu.parent || 'root';
+    const list = temp[parent] || [];
+    list.push(menu);
+    temp[parent] = list;
+  });
+
+  function getTreeNodeList(parent,result = []){
+    toAry(temp[parent]).map((item) => {
+      result.push(item);
+      getTreeNodeList(item.menu_id,result);
+    });
+    return result;
+  }
+  const {page_num,page_size} = req.body;
+  const totalList = getTreeNodeList(target.menu_id,[target]);
+  return {
+    total:totalList.length,
+    list:totalList.slice((page_num - 1) * page_size,page_num * page_size),
+  };
 }
 
 /**
@@ -41,11 +82,7 @@ async function search(req,res){
  * @param res
  */
 async function create(req,res){
-  const data = await createMenu(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return createMenu(req.body);
 }
 
 /**
@@ -54,11 +91,7 @@ async function create(req,res){
  * @param res
  */
 async function update(req,res){
-  const data = await updateMenu(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return updateMenu(req.body);
 }
 
 /**
@@ -67,11 +100,7 @@ async function update(req,res){
  * @param res
  */
 async function deleteFunc(req,res){
-  const data = await deleteMenu(req.body.menu_id);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return deleteMenu(req.body.menu_id);
 }
 
 /**
@@ -90,6 +119,9 @@ async function menuTree(req,res){
   });
 
   function getTreeNodeList(parent){
+    if(!temp[parent]){
+      return null;
+    }
     return toAry(temp[parent]).map((item) => {
       return {
         ...item,
@@ -98,11 +130,6 @@ async function menuTree(req,res){
         value:item.menu_id,
       };
     });
-  };
-
-  res.send({
-    code:0,
-    data:getTreeNodeList('root'),
-  });
-
+  }
+  return getTreeNodeList('root');
 }

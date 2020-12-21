@@ -221,13 +221,13 @@ export class TableSearch extends DefineComponent {
         title:'查询',
         onClick:this.doSearch,
         type:'primary',
-        auth:this.getPagination('searchAuth'),
+        auth:this.getProp('searchAuth'),
       },
       reset:{
         title:'重置',
         onClick:this.doReset,
         type:'primary',
-        auth:this.getPagination('resetAuth'),
+        auth:this.getProp('resetAuth'),
       },
     };
     return toAry(btnOptions).map((opt) => {
@@ -242,8 +242,12 @@ export class TableSearch extends DefineComponent {
     };
   }
 
-  doSearch = () => {
+  doSearch = (extParams = {}) => {
     this.getForm().validator().then((params) => {
+      params = {
+        ...params,
+        ...extParams,
+      };
       const {beforeLoad} = this.props;
       const pagination = this.getProp('pagination');
       params = beforeLoad ? beforeLoad(params) : params;

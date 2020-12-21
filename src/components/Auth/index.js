@@ -13,15 +13,14 @@ import {toAry} from "@wangct/util/lib/arrayUtil";
 }))
 export default class Auth extends PureComponent{
   check(){
-    let {authMap = {},auth,or,and = auth,check} = this.props;
+    let {authMap,auth,or,and = auth,check} = this.props;
     if(check){
-      return check(authMap);
+      return check(authMap || {});
     }
     and = toAry(and);
     or = toAry(or);
-    console.log(and,or);
-    const andBol = and.length === 0 || and.every(item => authMap[item]);
-    const orBol = or.length === 0 || or.some(item => authMap[item]);
+    const andBol = !authMap || and.length === 0 || and.every(item => authMap[item]);
+    const orBol = !authMap || or.length === 0 || or.some(item => authMap[item]);
     return andBol && orBol;
   }
 

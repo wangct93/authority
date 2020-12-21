@@ -7,6 +7,8 @@ import {TreeSelect} from "../../components/Select";
 import {deptCreate, deptDelete, deptSearch, deptTreeSearch, deptUpdate} from "../../services/dept";
 import {colTimeWidth} from "../../utils/columns";
 import css from './index.less';
+import Auth from "../../components/Auth";
+import {auths} from "../../json/auths";
 
 /**
  * 部门
@@ -55,8 +57,12 @@ export default class MenuPage extends DefineComponent {
         width: 100,
         render: (v, row) => {
           return <div className="op-box">
-            <a onClick={this.doUpdate.bind(this, row)}>编辑</a>
-            <a onClick={this.doDelete.bind(this, row)}>删除</a>
+            <Auth auth={auths.deptUpdate}>
+              <a onClick={this.doUpdate.bind(this, row)}>编辑</a>
+            </Auth>
+            <Auth auth={auths.deptDelete}>
+              <a onClick={this.doDelete.bind(this, row)}>删除</a>
+            </Auth>
           </div>;
         }
       },
@@ -102,6 +108,7 @@ export default class MenuPage extends DefineComponent {
       {
         title: '新增',
         onClick: this.doCreate,
+        auth:auths.deptCreate,
       },
       'search',
       'reset',
@@ -118,6 +125,7 @@ export default class MenuPage extends DefineComponent {
       loadData={deptSearch}
       ref={this.setTable}
       defaultSearch
+      searchAuth={auths.deptSearch}
     />;
   }
 }

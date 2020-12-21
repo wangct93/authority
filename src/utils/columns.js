@@ -16,3 +16,9 @@ export const colUserIdWidth = 100;
  * @type {number}
  */
 export const colTimeWidth = 160;
+
+/**
+ * 菜单列表列宽
+ * @type {number}
+ */
+export const colMenuListWidth = 200;

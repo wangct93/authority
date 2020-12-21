@@ -3,9 +3,11 @@ import css from './index.less';
 import Flex, {FlexItem} from "../../components/Flex";
 import DefineComponent from "../../components/DefineComponent";
 import DateView from "../../components/DateView";
-import {getPathname, pathMatch, pathTo, reduxConnect, updateModel} from "../../frame";
+import {getPathname, openConfirm, pathMatch, pathTo, reduxConnect, updateModel} from "../../frame";
 import {classNames} from "@wangct/util/lib/util";
-import {queryUserInfo} from "../../services/user";
+import {queryUserInfo, userLogout} from "../../services/user";
+import {Icon, Tooltip} from "antd";
+import {updateUserInfo} from "../../utils/util";
 
 /**
  * 布局
@@ -21,10 +23,7 @@ export default class Layout extends DefineComponent {
   }
 
   checkUserInfo(){
-    queryUserInfo().then((userInfo) => {
-      updateModel('layout',{
-        userInfo,
-      });
+    updateUserInfo().then(() => {
       this.setState({
         checked:true,
       });
@@ -57,7 +56,32 @@ class Header extends DefineComponent {
       <MenuList />
       <FlexItem />
       <DateView />
+      <Logout />
     </Flex>
+  }
+}
+
+/**
+ * 登出组件
+ */
+class Logout extends DefineComponent {
+  state = {};
+
+  doLogout = () => {
+    openConfirm({
+      title:'确认退出吗？',
+      onOk:() => {
+        userLogout().then(() => {
+          pathTo('/login');
+        });
+      },
+    });
+  };
+
+  render() {
+    return <Tooltip title="退出">
+      <Icon className={css.icon_logout} onClick={this.doLogout} type="logout" />
+    </Tooltip>;
   }
 }
 

@@ -35,5 +35,5 @@ function pathExtname(fileName,hasDou = false) {
  * @returns {string}
  */
 function pathFilename(fileName,hasExt = true){
-  return path.basename(fileName,hasExt ? path.extname(fileName) : undefined);
+  return path.basename(fileName,hasExt ? undefined : path.extname(fileName));
 }

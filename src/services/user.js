@@ -7,6 +7,7 @@ import {requestApi} from "../frame";
 export function userSearch(params){
   return requestApi('/user/search',{
     body:params,
+    loading:true,
   });
 }
 
@@ -17,6 +18,7 @@ export function userSearch(params){
 export function userCreate(params){
   return requestApi('/user/create',{
     body:params,
+    loading:true,
   });
 }
 
@@ -27,6 +29,7 @@ export function userCreate(params){
 export function userUpdate(params){
   return requestApi('/user/update',{
     body:params,
+    loading:true,
   });
 }
 
@@ -39,6 +42,7 @@ export function userDelete(user_id){
     body:{
       user_id,
     },
+    loading:true,
   });
 }
 
@@ -49,6 +53,17 @@ export function userDelete(user_id){
 export function userLogin(params){
   return requestApi('/user/login',{
     body:params,
+    loading:true,
+  });
+}
+
+/**
+ * 用户登出
+ * @author wangchuitong
+ */
+export function userLogout(){
+  return requestApi('/user/logout',{
+    loading:true,
   });
 }
 
@@ -59,5 +74,6 @@ export function userLogin(params){
 export function queryUserInfo(){
   return requestApi('/user/queryUserInfo',{
     alertError:false,
+    loading:true,
   });
 }

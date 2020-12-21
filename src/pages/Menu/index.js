@@ -4,11 +4,15 @@ import Input from "../../components/Input";
 import {TableSearch} from "../../components/Table";
 import {alertSucInfo, openModal} from "../../utils/frameUtil";
 import {TreeSelect} from "../../components/Select";
-import {menuCreate, menuDelete, menuSearch, menuTreeSearch, menuUpdate} from "../../services/menu";
+import {menuCreate, menuDelete, menuNodeSearch, menuSearch, menuTreeSearch, menuUpdate} from "../../services/menu";
 import {colTimeWidth} from "../../utils/columns";
 import css from './index.less';
 import {auths} from "../../json/auths";
 import Auth from "../../components/Auth";
+import Flex, {FlexItem} from "../../components/Flex";
+import Tree from "../../components/Tree";
+import {Icon} from "antd";
+import {toAry} from '@wangct/util';
 
 /**
  * 菜单
@@ -110,23 +114,49 @@ export default class MenuPage extends DefineComponent {
         onClick: this.doCreate,
         auth:auths.menuCreate,
       },
-      'search',
+      {
+        title:'查询',
+        onClick:this.doSearch,
+        auth:auths.menuSearch,
+      },
       'reset',
     ];
   }
 
+  doSearch = () => {
+    this.searchMode = SearchMode.search;
+    this.setSelectedKey(null);
+    this.tableSearch();
+  };
+
+  treeSelect = (keys,e) => {
+    const key = e.node.props.data.value;
+    this.searchMode = SearchMode.node;
+    this.tableSearch({parent:key});
+    this.setSelectedKey(key);
+  };
+
+  loadData = (params) => {
+    const func = this.searchMode === SearchMode.node ? menuNodeSearch : menuSearch;
+    return func(params);
+  };
 
   render() {
     const {state} = this;
-    return <TableSearch
-      columns={state.columns}
-      filterOptions={state.filterOptions}
-      btnOptions={this.getTableBtn()}
-      loadData={menuSearch}
-      ref={this.setTable}
-      searchAuth={auths.menuSearch}
-      defaultSearch
-    />;
+    return <Flex className={css.container}>
+      <Left onChange={this.treeSelect} value={this.getSelectedKey()} />
+      <FlexItem>
+        <TableSearch
+          columns={state.columns}
+          filterOptions={state.filterOptions}
+          btnOptions={this.getTableBtn()}
+          loadData={this.loadData}
+          ref={this.setTable}
+          searchAuth={auths.menuSearch}
+          defaultSearch
+        />
+      </FlexItem>
+    </Flex>;
   }
 }
 
@@ -162,3 +192,29 @@ function getFormOptions(isCreate = true){
     },
   ];
 }
+
+/**
+ * 左侧树
+  */
+class Left extends DefineComponent {
+  render() {
+    return <Flex column className={css.left_box}>
+      <div className={css.header}>
+        <Icon type="appstore" />
+        菜单树
+      </div>
+      <FlexItem className={css.tree_box}>
+        <Tree selectedKeys={this.getValue()} onSelect={this.onChange} loadData={menuTreeSearch} />
+      </FlexItem>
+    </Flex>
+  }
+}
+
+/**
+ * 查询模式
+ * @type {{node: string, search: string}}
+ */
+const SearchMode = {
+  node:'1',
+  search:'2',
+};

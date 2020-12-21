@@ -6,7 +6,8 @@ import {requestApi} from "../frame";
  */
 export function deptSearch(params) {
   return requestApi('/dept/search', {
-    body: params
+    body: params,
+    loading:true,
   });
 }
 
@@ -16,7 +17,8 @@ export function deptSearch(params) {
  */
 export function deptCreate(params) {
     return requestApi('/dept/create', {
-        body: params
+        body: params,
+      loading:true,
     });
 }
 
@@ -27,7 +29,8 @@ export function deptCreate(params) {
  */
 export function deptUpdate(params) {
     return requestApi(`/dept/update`, {
-        body: params
+        body: params,
+      loading:true,
     })
 }
 
@@ -40,6 +43,7 @@ export function deptDelete(dept_id) {
       body:{
         dept_id,
       },
+      loading:true,
     });
 }
 

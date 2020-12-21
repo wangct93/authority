@@ -156,10 +156,10 @@ export default class DefineComponent extends PureComponent {
     return this.table;
   }
 
-  tableSearch(){
+  tableSearch(params){
     const table = this.getTable();
     if(table && table.doSearch){
-      table.doSearch();
+      table.doSearch(params);
     }
   }
 

@@ -1,4 +1,6 @@
 const express = require('express');
+const {catchError} = require("@wangct/util/lib/util");
+const queryMenuListByUserId = require("../db/menu").queryMenuListByUserId;
 const {toStr} = require("@wangct/util/lib/stringUtil");
 const {deleteUser} = require("../db/user");
 const {updateUser} = require("../db/user");
@@ -10,12 +12,15 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/search',search);
-router.post('/create',create);
-router.post('/update',update);
-router.post('/delete',deleteFunc);
-router.post('/login',login);
-router.post('/queryUserInfo',queryUserInfoByCookie);
+module.exports = {
+  search,
+  create,
+  update,
+  delete:deleteFunc,
+  login,
+  queryUserInfo:queryUserInfoByCookie,
+  logout,
+};
 
 /**
  * 查询
@@ -29,13 +34,10 @@ async function search(req,res){
   }).then((data) => data.length);
   const listPro = await queryUserList(req.body);
   const [total,list] = await Promise.all([totalPro,listPro]);
-  res.send({
-    code:0,
-    data:{
-      total,
-      list,
-    },
-  });
+  return {
+    total,
+    list,
+  };
 }
 
 /**
@@ -44,11 +46,7 @@ async function search(req,res){
  * @param res
  */
 async function create(req,res){
-  const data = await createUser(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return createUser(req.body);
 }
 
 /**
@@ -57,11 +55,7 @@ async function create(req,res){
  * @param res
  */
 async function update(req,res){
-  const data = await updateUser(req.body);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return updateUser(req.body);
 }
 
 /**
@@ -70,11 +64,7 @@ async function update(req,res){
  * @param res
  */
 async function deleteFunc(req,res){
-  const data = await deleteUser(req.body.user_id);
-  res.send({
-    code:0,
-    data:data.insertId,
-  });
+  return deleteUser(req.body.user_id);
 }
 
 /**
@@ -86,15 +76,9 @@ async function login(req,res){
   if(userInfo){
     const token = encode(JSON.stringify({user_id:req.body.user_id,user_password:req.body.user_password}));
     res.cookie('token',token);
-    res.send({
-      code:0,
-      data:userInfo,
-    });
+    return userInfo;
   }else{
-    res.send({
-      code:500,
-      message:'用户名或者密码错误',
-    });
+    throw '用户名或者密码错误';
   }
 }
 
@@ -109,33 +93,28 @@ async function queryUserInfo(data){
 }
 
 /**
- * 登录
+ * 根据cookie获取用户信息
  * @returns {Promise<void>}
  */
 async function queryUserInfoByCookie(req,res){
   const {token} = req.cookies;
-  if(token){
-    try{
-      const params = JSON.parse(decode(toStr(token)));
-      const userInfo = await queryUserInfo(params);
-      if(userInfo){
-        res.send({
-          code:0,
-          data:userInfo,
-        });
-      }else{
-        res.send({
-          code:500,
-        });
-      }
-    }catch(e){
-      res.send({
-        code:500,
-      });
-    }
-  }else{
-    res.send({
-      code:500,
-    });
+  const params = catchError(() => {
+    return JSON.parse(decode(toStr(token))) || {};
+  },{});
+  const userInfo = await queryUserInfo(params);
+  if(userInfo){
+    const menuList = await queryMenuListByUserId(userInfo.user_id);
+    return {
+      ...userInfo,
+      menu_list:menuList,
+    };
   }
+  throw '获取用户信息失败';
+}
+
+/**
+ * 登出
+ */
+function logout(req,res){
+  res.cookie('token','');
 }

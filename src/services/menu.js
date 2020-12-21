@@ -6,7 +6,19 @@ import {requestApi} from "../frame";
  */
 export function menuSearch(params) {
   return requestApi('/menu/search', {
-    body: params
+    body: params,
+    loading:true,
+  });
+}
+
+/**
+ * 菜单节点查询
+ * @author wangchuitong
+ */
+export function menuNodeSearch(params) {
+  return requestApi('/menu/nodeSearch', {
+    body: params,
+    loading:true,
   });
 }
 
@@ -16,7 +28,8 @@ export function menuSearch(params) {
  */
 export function menuCreate(params) {
     return requestApi('/menu/create', {
-        body: params
+        body: params,
+      loading:true,
     });
 }
 
@@ -27,7 +40,8 @@ export function menuCreate(params) {
  */
 export function menuUpdate(params) {
     return requestApi(`/menu/update`, {
-        body: params
+        body: params,
+      loading:true,
     })
 }
 
@@ -40,6 +54,7 @@ export function menuDelete(menu_id) {
       body:{
         menu_id,
       },
+      loading:true,
     });
 }
 
@@ -48,5 +63,5 @@ export function menuDelete(menu_id) {
  * @returns {Promise<*>}
  */
 export function menuTreeSearch(){
-  return requestApi('/menu/menuTree')
+  return requestApi('/menu/menuTree');
 }
