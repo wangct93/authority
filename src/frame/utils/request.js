@@ -1,5 +1,5 @@
 import {isStr} from "@wangct/util/lib/typeUtil";
-import {getGlobalConfig, showLoading} from "./utils";
+import {getGlobalConfig, setGlobalConfig, showLoading} from "./utils";
 
 const {fetch} = window;
 
@@ -55,6 +55,24 @@ export function requestApi(url,options = {}){
     return request('/api' + url,options);
   }
   return request(url,options);
+}
+
+/**
+ * 字典请求
+ */
+export async function requestCache(url,needCache = true){
+  const func = () => {
+    return requestApi(url);
+  };
+  if(!needCache){
+    return func();
+  }
+  let data = getGlobalConfig(url);
+  if(!data){
+    data = await func();
+    setGlobalConfig(url,data);
+  }
+  return data;
 }
 
 /**

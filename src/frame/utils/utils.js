@@ -4,6 +4,7 @@ import {addFragment, removeFragment} from "./state";
 import Loading from "../components/Loading";
 import globalConfig from '../config/config';
 import {Modal} from 'antd';
+import {catchError} from "@wangct/util/lib/util";
 
 /**
  * 获取全局配置
@@ -54,4 +55,25 @@ export function openConfirm(options){
   })
 }
 
+/**
+ * 设置本地缓存
+ * @param key
+ * @param value
+ */
+export function setLocalStore(key,value){
+  if(!isStr(value)){
+    value = JSON.stringify(value);
+  }
+  localStorage.setItem(key,value);
+}
 
+/**
+ * 获取本地缓存
+ * @param key
+ */
+export function getLocalStore(key){
+  const value = localStorage.getItem(key);
+  return catchError(() => {
+    return JSON.parse(value);
+  },value);
+}

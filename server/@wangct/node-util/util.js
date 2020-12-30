@@ -3,7 +3,6 @@
  */
 
 const {objForEach} = require('@wangct/util');
-const request = require('./request');
 
 module.exports = {
     getLocalIp,
@@ -11,7 +10,6 @@ module.exports = {
     getOuterNetIp,
     closePort,
     proxyRequest,
-    request,
     getReqBody,
     cbPromise,
 };
@@ -166,20 +164,42 @@ function getOuterNetIp(){
 
 /**
  * 获取请求的数据
- * @param req
  * @returns {Promise<*>}
  */
-async function getReqBody(req){
-    return new Promise((cb,eb) => {
-        let buf = Buffer.alloc(0);
-        req.on('data',(chunk) => {
-            buf = Buffer.concat([buf,chunk]);
-        });
-        req.on('end',() => {
-            cb(buf);
-        });
-        req.on('error',eb);
-    })
+async function getReqBody(req,options = {}) {
+
+  return new Promise((cb, eb) => {
+    let buf = Buffer.alloc(0);
+    const {timeout = 60 * 1000} = options;
+    let timer;
+
+    function start() {
+      clear();
+      timer = setTimeout(() => {
+        console.log('getReqBody超时');
+        eb('timeout');
+      }, timeout);
+    }
+
+    function clear() {
+      clearTimeout(timer);
+    }
+
+    start();
+    req.on('data', (chunk) => {
+      start();
+      buf = Buffer.concat([buf, chunk]);
+    });
+    req.on('end', () => {
+      clear();
+      cb(buf);
+    });
+    req.on('error', (err) => {
+      clear();
+      eb(err);
+    });
+
+  });
 }
 
 /**

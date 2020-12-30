@@ -1,12 +1,13 @@
 import './styles/global.less';
 import React from 'react';
-import {render as reactDomRender} from 'react-dom';
+import {render} from 'react-dom';
 import selfModels from './models';
 import {getElem} from "./utils/utils";
 import {getStore} from "./modules/store";
 import {setStore} from "./utils/state";
 import RouterMod from "./components/Router";
 
+export DefineComponent from './components/DefineComponent';
 export history from './modules/history';
 export * from './utils/request';
 export * from './utils/utils';
@@ -23,7 +24,7 @@ export function appStart(elem = 'root'){
     elem = getElem(elem);
     const store = getStore([...models,...selfModels]);
     setStore(store);
-    reactDomRender(<RouterMod store={store} routes={routes} />,elem);
+    render(<RouterMod store={store} routes={routes} />,elem);
   });
 }
 

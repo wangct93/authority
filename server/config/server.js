@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-  port:6789,
+  port:9595,
   html:'dist/index.html',
   assets:['dist'],
   assetsPaths:['assets']

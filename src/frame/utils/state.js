@@ -4,6 +4,8 @@ import {Fields} from "../json/dic";
 import {isObj} from "@wangct/util";
 import {toAry} from "@wangct/util/lib/arrayUtil";
 import {getStoreDispatch} from "../modules/store";
+import {random} from "@wangct/util/lib/util";
+import React from "react";
 
 /**
  * 是否为选项卡路由
@@ -118,7 +120,16 @@ export function setFragmentList(fragmentList){
  * 添加内容片段
  */
 export function addFragment(content){
+  if(!React.isValidElement(content)){
+    const Com = content;
+    content = <Com key={random()} />
+  }
   setFragmentList([...getFragmentList(),content]);
+  return {
+    close:() => {
+      removeFragment(content);
+    },
+  };
 }
 
 /**

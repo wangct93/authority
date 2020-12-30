@@ -21,7 +21,7 @@ const defaultConfig = {
   port:'3306',
   user:'root',
   password:'123456',
-  database:'auth'
+  database:'book'
 };
 
 class Mysql extends BaseClass{
@@ -45,6 +45,8 @@ class Mysql extends BaseClass{
       if(!sql){
         return eb({message:'未获取到sql'});
       }
+      console.log('执行sql：',sql);
+      const timer = +new Date();
       const {host, port, user, password, database} = this.props;
       const target = mysql.createConnection({
         host,
@@ -55,11 +57,12 @@ class Mysql extends BaseClass{
       });
       target.connect();
       target.query(sql, (err, data) => {
+        const timeMsg = `\n用时：${(+new Date() - timer) / 1000}s`;
         if (err) {
-          logInfo(resolve(this.getProp('logDirname'),'error.txt'),err);
+          logInfo(resolve(this.getProp('logDirname'),'error.txt'),err + timeMsg);
           eb(err);
         } else {
-          logInfo(resolve(this.getProp('logDirname'),'success.txt'),sql);
+          logInfo(resolve(this.getProp('logDirname'),'success.txt'),sql + timeMsg);
           cb(data);
         }
       });
@@ -84,7 +87,7 @@ class Mysql extends BaseClass{
       }
       return field;
     }).join(',');
-    const sql = `select ${selectField} from ${table} ${getWhere(where)} ${getDesc(orderField,orderDesc)} ${getLimit(limit)}`;
+    const sql = `select ${selectField} from ${table} ${getWhere(where)} ${getDesc(orderField,orderDesc)} ${getLimit(limit)} ${getGroup(options.group)}`;
     return this.query(sql);
   }
 
@@ -94,7 +97,7 @@ class Mysql extends BaseClass{
       return null;
     }
     const setSql = Object.keys(data).map((key) => {
-      return `${key}=${formatValue(data[key])}`;
+      return `${key}=${getValue(data[key])}`;
     }).join(',');
     const sql = `update ${table} set ${setSql} ${getWhere(where)}`;
     return this.query(sql);
@@ -157,14 +160,16 @@ function formatValue(data){
 function getWhere(data = []){
   let where;
   if(isAry(data)){
-    where = toAry(data).map((item,index) => {
-      const {and,value,key} = item;
+    where = toAry(data).filter((item) => item.value != null || item.sql).map((item,index) => {
+      const {and,value,key,leftBracket,rightBracket} = item;
       const sep = index ? and  ? 'and' : 'or' : '';
-      return `${sep} ${key}=${value}`;
+      const keySep = item.isLike ? 'like' : '=';
+      const sql = item.sql ? item.sql : `${key} ${keySep} ${getValue(value)}`;
+      return `${leftBracket ? '(' : ''}${sep} ${sql}${rightBracket ? ')' : ''}`;
     }).join(' ');
   }else{
-    where = Object.keys(data).filter((key) => toStr(data[key])).map((key) => {
-      return `${key}=${data[key]}`;
+    where = Object.keys(data).filter((key) => data[key] != null).map((key) => {
+      return `${key}=${getValue(data[key])}`;
     }).join(' and ');
   }
   if(!where){
@@ -184,6 +189,18 @@ function getLimit(limit){
     return '';
   }
   return ` limit ${start},${size}`;
+}
+
+/**
+ * 获取分组
+ * @param group
+ * @returns {string}
+ */
+function getGroup(group){
+  if(group){
+    return ' group by ' + group;
+  }
+  return '';
 }
 
 /**
@@ -214,4 +231,17 @@ function logInfo(filePath,msg){
   msg = '\n*******************************************\n' + msg;
   log(msg);
   require('fs').appendFileSync(filePath, msg);
+}
+
+/**
+ * 获取值
+ */
+function getValue(value){
+  value = toStr(value);
+  const sep = '$';
+  const hideMarks = value[0] === sep && value[value.length - 1] === sep;
+  if(hideMarks){
+    return value.substr(1,value.length - 2);
+  }
+  return '"' + value + '"';
 }

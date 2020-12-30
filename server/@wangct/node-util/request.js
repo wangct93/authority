@@ -1,4 +1,6 @@
 const util = require('@wangct/util');
+const {getReqBody} = require("./util");
+const {strParse,stringify,objMap} = util;
 
 module.exports = request;
 
@@ -15,11 +17,16 @@ const defaultOptions = {
 async function request(url,options = {}){
   const http = require('http');
   const https = require('https');
-  return new Promise(async (cb,eb) => {
+  const pro = new Promise(async (cb,eb) => {
     options = {
       ...defaultOptions,
       ...options,
     };
+    console.log('request地址：',url);
+    if(!url){
+      eb('地址不能为空');
+      return null;
+    }
     const httpMod = url.startsWith('https') ? https : http;
     const hasFormData = !!options.formData;
     const isPost = options.method.toLocaleString() === 'post';
@@ -29,15 +36,39 @@ async function request(url,options = {}){
         ...options.headers,
       };
     }
-    const req = httpMod.request(url,options,cb);
-    req.on('error',eb);
+    const urlData = require('url').parse(url);
+    let qsParams = strParse(urlData.query || '');
+    qsParams = objMap(qsParams,(value) => encodeURIComponent(value));
+    const req = httpMod.request(urlData.protocol + '//' + urlData.host + urlData.pathname + '?' + stringify(qsParams),options,(res) => {
+      clearTimeout(timer);
+      if(options.getRes){
+        cb(res);
+      }else{
+        getReqBody(res).then(cb,eb);
+      }
+    });
+    req.on('error',(err) => {
+      clearTimeout(timer);
+      eb(err);
+    });
     if(hasFormData){
       await reqWriteFiles(req,options.body,options.formData);
     }else if(isPost && options.body){
-      req.write(JSON.stringify(options.body));
+      const writeData = options.headers['content-type'] === 'application/json' ? JSON.stringify(options.body) : options.body;
+      req.write(writeData);
     }
+    const {timeout = 60 * 1000} = options;
+    const timer = setTimeout(() => {
+      req.destroy('timeout');
+      console.log('超时，request地址：',url);
+      eb('timeout');
+    },timeout);
     req.end();
   });
+  pro.finally(() => {
+    console.log('结束，request地址：',url);
+  });
+  return pro;
 }
 
 /**
